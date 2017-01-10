@@ -1,4 +1,5 @@
 import pprint
+import copy
 from random import randint
 w = 4
 x_len = 5
@@ -31,17 +32,20 @@ def D(x, z):
 
 
 def theta():
-    Ap = A
+    Ap = copy.deepcopy(A)
     for x in range(x_len):
         for y in range(y_len):
             for z in range(z_len):
-                Ap[x][y][z] = D(x, z)
+                Ap[x][y][z] = D(x,z)
+                
     return Ap
 
 generateA(w)
-Ap = theta()
 
+
+Ap = theta()
 pprint.pprint(A)
+
 pprint.pprint('-------------------')
 
 pprint.pprint(Ap)
