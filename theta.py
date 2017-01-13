@@ -36,19 +36,94 @@ def theta():
     for x in range(x_len):
         for y in range(y_len):
             for z in range(z_len):
-                Ap[x][y][z] = D(x,z)
+                Ap[x][y][z] =Ap[x][y][z] ^ D(x,z)
                 
     return Ap
+
+
+
+def printRows(mat, label):
+    for y in range(y_len):
+        for z in range(z_len):
+            print()
+            if label == True:
+                print("Y =", y , "Z =", z)
+            for x in range(x_len):
+                print(mat[x][y][z], end="")    
+    print()
+
+def printCompRows(mat, mat2, label):
+    for y in range(y_len):
+        for z in range(z_len):
+            print()
+            if label == True:
+                print("Y =", y , "Z =", z)
+            for x in range(x_len):
+                print(mat[x][y][z], end="")
+            print(" | ", end="")
+            for x in range(x_len):
+                print(mat2[x][y][z], end="")    
+    print()
+
+def printColoumns(mat, label):
+    for x in range(x_len):
+        for z in range(z_len):
+            print()
+            if label == True:
+                print("X =", x , "Z =", z)
+            for y in range(y_len):            
+                print(mat[x][y][z])
+    print()    
+
+def printCompColoumns(mat, mat2, label):
+    for x in range(x_len):
+        for z in range(z_len):
+            print()
+            if label == True:
+                print("X =", x , "Z =", z)
+            for y in range(y_len):            
+                print(mat[x][y][z], " | " ,mat2[x][y][z])
+    print()    
+
+def printLanes(mat, label):
+    for x in range(x_len):
+        for y in range(y_len):            
+            print()
+            if label == True:
+                print("X =", x , "Y =", y , " : ", end="")
+            for z in range(z_len):
+                print(mat[x][y][z], end="")
+    print()    
+
+def printCompLanes(mat,mat2, label):
+    for x in range(x_len):
+        for y in range(y_len):            
+            print()
+            if label == True:
+                print("X =", x , "Y =", y , " : ", end="")
+            for z in range(z_len):
+                print(mat[x][y][z], end="")
+            print(" | ", end="")
+            for z in range(z_len):
+                print(mat2[x][y][z], end="")
+    print()    
 
 generateA(w)
 
 
+
 Ap = theta()
-pprint.pprint(A)
+# pprint.pprint(A)
 
-pprint.pprint('-------------------')
+# pprint.pprint('-------------------')
 
-pprint.pprint(Ap)
+# pprint.pprint(Ap)
+
+#print(printRows(Ap, False))
+# print(printColoumns(A, False))
+#print(printLanes(Ap, True))
+# print(printCompColoumns(A, Ap, False))
+# print(printCompLanes(A,Ap, True))
 
 
-
+printCompRows(A,Ap,True)
