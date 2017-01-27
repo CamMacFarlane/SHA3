@@ -1,6 +1,4 @@
-import pprint
 import copy
-from random import randint
 import matrixUtils as mu
 w = 4
 x_len = 5

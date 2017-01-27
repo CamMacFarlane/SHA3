@@ -1,6 +1,4 @@
-import pprint
 import copy
-from random import randint
 import matrixUtils as mu
 
 w = 4
@@ -30,7 +28,6 @@ def ro(mat):
         swap = y
         y = (2*x + 3*y)%y_len 
         x = swap
-        print(x , y, (z - offset) % w)
     
 
     return matp
