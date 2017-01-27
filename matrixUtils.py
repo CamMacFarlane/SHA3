@@ -1,3 +1,4 @@
+from random import randint
 x_len = 5
 y_len = 5
 z_len = 0
@@ -139,4 +140,11 @@ def matPrint(mat, format, comp, label, *args):
 def setZLen(z):
     global z_len
     z_len = z
+    
+def populate(mat):
+    
+    for x in range(len(mat)):
+        for y in range(len(mat[0])):
+            for z in range(len(mat[0][0])):
+                mat[x][y][z] = randint(0, 1)
     
