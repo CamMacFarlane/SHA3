@@ -2,7 +2,7 @@ import pprint
 import copy
 from random import randint
 import matrixUtils as mu
-import time
+
 w = 4
 x_len = 5
 y_len = 5
@@ -19,7 +19,8 @@ def generate(w):
             for z in range(z_len):
                 A[x][y][z] = randint(0, 1)
     return A
-
+    
+#shifts lanes by offset
 def ro(mat):
     matp = copy.deepcopy(mat)
     z = 0
@@ -32,8 +33,6 @@ def ro(mat):
             offset = ((t+1)*(t+2)/2)
             offset = int(offset)
             matp[x][y][z] = mat[x][y][(z - offset)%w]
-            # print(matp[x][y][z])
-        # mu.matPrint(matp, 'l', False, True)
         swap = y
         y = (2*x + 3*y)%5 #ah ha!
         x = swap
@@ -43,9 +42,7 @@ def ro(mat):
     return matp
 
 A = generate(w)
-# mu.setZLen(4)
-# mu.matPrint(A, 'l', False, True)
 
 Ap = ro(A)
 mu.matPrint(Ap, 'l', True, True, A)
-    
+        

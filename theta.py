@@ -44,11 +44,9 @@ def theta(mat):
 
 
 
-mu.setZLen(w)
 
 generateA(w)
 
 Ap = theta(A)   
 
-mu.matPrint(Ap, 'c', True, True, A)
-
+mu.matPrint(Ap, 'c', True, True, Ap)
