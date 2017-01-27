@@ -43,7 +43,7 @@ def ro(mat):
     return matp
 
 A = generate(w)
-mu.setZLen(4)
+# mu.setZLen(4)
 # mu.matPrint(A, 'l', False, True)
 
 Ap = ro(A)

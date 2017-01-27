@@ -104,9 +104,13 @@ variables:
     *args = where the comparison matix is supplied 
 '''
 def matPrint(mat, format, comp, label, *args):
+    global z_len
     if(z_len == 0):
-        print("ERROR: You must set the z length using matrixUtils.setZLen()")
-        return 
+        z_len = len(mat[0][0])
+        # print (z_len)
+        # exit()
+        # print("ERROR: You must set the z length using matrixUtils.setZLen()")
+        # return 
 
     if comp and len(args) > 0 and  type(args[0] == type(mat)):
         mat2 = args[0]
