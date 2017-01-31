@@ -73,6 +73,21 @@ def printCompLanes(mat,mat2, label):
                 print(mat2[x][y][z], end="")
     print()    
 
+def printSheet(mat, mat2):
+    for z in range(z_len):
+        print("Sheet Z = ", z, "\n\n")
+        
+        for x in range(x_len):
+            print()
+            for y in range(y_len):
+                print(mat[x][y][z], end="")
+        
+        print("\n----------------------", end="")
+        for x in range(x_len):
+            print()
+            for y in range(y_len):
+                print(mat2[x][y][z], end="")
+        print("\n\n")
 # def printColoumns(mat, label):
 #     for x in range(x_len):
 #         for z in range(z_len):
@@ -142,6 +157,8 @@ def setZLen(z):
     z_len = z
     
 def populate(mat):
+    global z_len
+    z_len = len(mat[0][0])
     
     for x in range(len(mat)):
         for y in range(len(mat[0])):
