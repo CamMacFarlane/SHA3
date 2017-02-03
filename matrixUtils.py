@@ -1,3 +1,4 @@
+from random import randint
 x_len = 5
 y_len = 5
 z_len = 0
@@ -72,6 +73,21 @@ def printCompLanes(mat,mat2, label):
                 print(mat2[x][y][z], end="")
     print()    
 
+def printSheet(mat, mat2):
+    for z in range(z_len):
+        print("Sheet Z = ", z, "\n\n")
+        
+        for x in range(x_len):
+            print()
+            for y in range(y_len):
+                print(mat[x][y][z], end="")
+        
+        print("\n----------------------", end="")
+        for x in range(x_len):
+            print()
+            for y in range(y_len):
+                print(mat2[x][y][z], end="")
+        print("\n\n")
 # def printColoumns(mat, label):
 #     for x in range(x_len):
 #         for z in range(z_len):
@@ -104,9 +120,13 @@ variables:
     *args = where the comparison matix is supplied 
 '''
 def matPrint(mat, format, comp, label, *args):
+    global z_len
     if(z_len == 0):
-        print("ERROR: You must set the z length using matrixUtils.setZLen()")
-        return 
+        z_len = len(mat[0][0])
+        # print (z_len)
+        # exit()
+        # print("ERROR: You must set the z length using matrixUtils.setZLen()")
+        # return 
 
     if comp and len(args) > 0 and  type(args[0] == type(mat)):
         mat2 = args[0]
@@ -135,4 +155,13 @@ def matPrint(mat, format, comp, label, *args):
 def setZLen(z):
     global z_len
     z_len = z
+    
+def populate(mat):
+    global z_len
+    z_len = len(mat[0][0])
+    
+    for x in range(len(mat)):
+        for y in range(len(mat[0])):
+            for z in range(len(mat[0][0])):
+                mat[x][y][z] = randint(0, 1)
     
