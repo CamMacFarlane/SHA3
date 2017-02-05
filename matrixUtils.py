@@ -1,4 +1,5 @@
 from random import randint
+import copy
 x_len = 5
 y_len = 5
 z_len = 0
@@ -73,41 +74,21 @@ def printCompLanes(mat,mat2, label):
                 print(mat2[x][y][z], end="")
     print()    
 
-def printSheet(mat, mat2):
+def printSheet(mat, mat2, matName, mat2Name):
     for z in range(z_len):
-        print("Sheet Z = ", z, "\n\n")
-        
-        for x in range(x_len):
+        print("Sheet Z = ", z, "\n")
+        print(matName)     
+        for y in range(y_len):
+            for x in range(x_len):
+                print(mat[x][y][z] , " ", end="")
+            print()        
+        print("\n---------------")
+        print(mat2Name)
+        for y in range(y_len):
+            for x in range(x_len):
+                print(mat2[x][y][z] , " ", end="")
             print()
-            for y in range(y_len):
-                print(mat[x][y][z], end="")
-        
-        print("\n----------------------", end="")
-        for x in range(x_len):
-            print()
-            for y in range(y_len):
-                print(mat2[x][y][z], end="")
-        print("\n\n")
-# def printColoumns(mat, label):
-#     for x in range(x_len):
-#         for z in range(z_len):
-#             print()
-#             if label == True:
-#                 print("X =", x , "Z =", z, " : ", end="")
-#             for y in range(y_len):            
-#                 print(mat[x][y][z])
-#     print()    
-
-# def printCompColoumns(mat, mat2, label):
-#     for x in range(x_len):
-#         for z in range(z_len):
-#             print()
-#             if label == True:
-#                 print("X =", x , "Z =", z)
-#             for y in range(y_len):            
-#                 print(mat[x][y][z], " | " ,mat2[x][y][z])
-#     print()   
-
+        print("\n")
 
 '''
 Prints a matrix by row, coloumnd or lane
@@ -119,6 +100,34 @@ variables:
     lable = boolean states whether or not to lable to output
     *args = where the comparison matix is supplied 
 '''
+def xtoFIPS(x):
+    return{
+       0:2,
+       1:3,
+       2:4,
+       3:0,
+       4:1,
+    }.get(x, "ERROR")
+
+def ytoFIPS(y):
+    return{
+       0:2,
+       1:1,
+       2:0,
+       3:4,
+       4:3,
+    }.get(y, "ERROR")
+
+def matToFIPS(mat):
+    matp = copy.deepcopy(mat)
+
+    for x in range(len(mat)):
+        for y in range(len(mat[0])):
+            for z in range(len(mat[0][0])):
+                matp[xtoFIPS(x)][ytoFIPS(y)][z] = mat[x][y][z]
+                # print(x,y,z, "->", xtoFIPS(x),ytoFIPS(y),z )
+    return matp
+
 def matPrint(mat, format, comp, label, *args):
     global z_len
     if(z_len == 0):
@@ -164,4 +173,13 @@ def populate(mat):
         for y in range(len(mat[0])):
             for z in range(len(mat[0][0])):
                 mat[x][y][z] = randint(0, 1)
+
+def populateTemp(mat):
+    global z_len
+    z_len = len(mat[0][0])
+    
+    for x in range(len(mat)):
+        for y in range(len(mat[0])):
+            for z in range(len(mat[0][0])):
+                mat[x][y][z] = randint(10,99)
     

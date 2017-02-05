@@ -33,5 +33,5 @@ def ro(mat):
     return matp
 
 Ap = ro(A)
+print("           After Ro | Before Ro")
 mu.matPrint(Ap, 'l', True, True, A)
-        
