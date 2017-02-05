@@ -15,6 +15,7 @@ def pi(mat):
         for y in range(y_len):
             for z in range(z_len):
                 matp[x][y][z] = mat[(x + 3*y)%x_len][x][z]
+                # print(x,y,z, "<-", ((x + 3*y)%x_len), x, z )
     return matp
 
 A = [[[0 for k in range(z_len)] for k in range(y_len)]
@@ -24,5 +25,8 @@ mu.populate(A)
 
 Ap = pi(A)
 
-mu.printSheet(Ap, A)
-#mu.matPrint(Ap, 'r', True, True, A )
+AFIPS = mu.matToFIPS(A)
+ApFIPS = mu.matToFIPS(Ap)
+
+print("THESE SHEETS HAVE BEEN REORGANIZED TO MATCH THE INDEXING IN FIGRURE 2 OF THE FIPS SHA3 DOCUMENT")
+mu.printSheet(AFIPS , ApFIPS, "A", "A'")
