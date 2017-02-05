@@ -37,5 +37,5 @@ def theta(mat):
 mu.populate(A)
 
 Ap = theta(A)   
-
+print("    After theta (A') | Before theta (A)")
 mu.matPrint(Ap, 'c', True, True, A)
