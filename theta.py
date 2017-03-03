@@ -1,12 +1,10 @@
 import copy
 import matrixUtils as mu
+
 w = 4
 x_len = 5
 y_len = 5
 z_len = w
-
-A = [[[0 for k in range(z_len)] for k in range(y_len)]
-     for k in range(x_len)]
 
 # coloumn parity
 def C(mat, x, z):
@@ -33,9 +31,15 @@ def theta(mat):
 
 
 
+def test():
 
-mu.populate(A)
+    A = [[[0 for k in range(z_len)] for k in range(y_len)]
+         for k in range(x_len)]
 
-Ap = theta(A)   
-print("    After theta (A') | Before theta (A)")
-mu.matPrint(Ap, 'c', True, True, A)
+    mu.populate(A)
+
+    Ap = theta(A) 
+    print("    After theta (A') | Before theta (A)")
+    mu.matPrint(Ap, 'c', True, True, A)
+
+# test()
