@@ -6,10 +6,6 @@ x_len = 5
 y_len = 5
 z_len = w
 
-A = [[[0 for k in range(z_len)] for k in range(y_len)]
-     for k in range(x_len)]
-
-mu.populate(A)
 
 #shifts lanes by offset
 def ro(mat):
@@ -32,6 +28,12 @@ def ro(mat):
 
     return matp
 
-Ap = ro(A)
-print("           After Ro | Before Ro")
-mu.matPrint(Ap, 'l', True, True, A)
+def test():
+    A = [[[0 for k in range(z_len)] for k in range(y_len)]
+         for k in range(x_len)]
+
+    mu.populate(A)
+
+    Ap = ro(A)
+    print("           After Ro | Before Ro")
+    mu.matPrint(Ap, 'l', True, True, A)

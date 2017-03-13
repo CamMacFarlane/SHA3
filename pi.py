@@ -18,24 +18,25 @@ def pi(mat):
                 # print(x,y,z, "<-", ((x + 3*y)%x_len), x, z )
     return matp
 
-A = [[[0 for k in range(z_len)] for k in range(y_len)]
-     for k in range(x_len)]
+def test():
+    A = [[[0 for k in range(z_len)] for k in range(y_len)]
+         for k in range(x_len)]
 
-mu.populate(A)
+    mu.populate(A)
 
-Ap = pi(A)
+    Ap = pi(A)
 
-AFIPS = mu.matToFIPS(A)
-ApFIPS = mu.matToFIPS(Ap)
+    AFIPS = mu.matToFIPS(A)
+    ApFIPS = mu.matToFIPS(Ap)
 
-print("THESE SHEETS HAVE BEEN REORGANIZED TO MATCH THE INDEXING IN FIGRURE 2 OF THE FIPS SHA3 DOCUMENT")
-mu.printSheet(AFIPS , ApFIPS, "A", "A'")
-# uncomment the lines below for easier verificaiton of the pi funtion
-# At = [[[0 for k in range(z_len)] for k in range(y_len)]
-#      for k in range(x_len)]
+    print("THESE SHEETS HAVE BEEN REORGANIZED TO MATCH THE INDEXING IN FIGRURE 2 OF THE FIPS SHA3 DOCUMENT")
+    mu.printSheet(AFIPS , ApFIPS, "A", "A'")
+    # uncomment the lines below for easier verificaiton of the pi funtion
+    # At = [[[0 for k in range(z_len)] for k in range(y_len)]
+    #      for k in range(x_len)]
 
-# mu.populateTemp(At)
-# Atp = pi(At)
-# AtFIPS = mu.matToFIPS(At)
-# AtpFIPS = mu.matToFIPS(Atp)
-# mu.printSheet(AtFIPS , AtpFIPS, "A", "A'")
+    # mu.populateTemp(At)
+    # Atp = pi(At)
+    # AtFIPS = mu.matToFIPS(At)
+    # AtpFIPS = mu.matToFIPS(Atp)
+    # mu.printSheet(AtFIPS , AtpFIPS, "A", "A'")
