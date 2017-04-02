@@ -13,8 +13,7 @@ def ro(mat):
     z = 0
     y = 0
     x = 1
-    global w
-    
+    w = len(mat[0][0])
     #for t = 0 to t = 23
     for t in range(24):
         for z in range(w):

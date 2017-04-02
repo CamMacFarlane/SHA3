@@ -14,7 +14,9 @@ def rc(t):
 
         R = np.delete(R,8)
     return R[0]
-
+    
+#*******************************************************************#
+#Test functions
 def test():
     for i in range(0,255):
         print(rc(i))
