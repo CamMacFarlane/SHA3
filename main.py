@@ -110,6 +110,7 @@ def convertStringToStateMatrix(b):
     #returns pointer to A
     return A
 
+
 def convertMatrixToString(A, strlen):
     w = getW(strlen)
     SaL = list('x' * strlen)
@@ -122,6 +123,14 @@ def convertMatrixToString(A, strlen):
     SaS = "".join(SaL)
     return SaS
 
+def convertMatrixToList(A, lLen):
+    AaL = list('x' * strlen)
+
+    for x in range(5):
+        for y in range(5):
+            for z in range(w):
+               AaL[w*(5*y + x) + z] = str(A[x][y][z])
+    return AaL
 #keccackp takes a string b and a number of rounds nr
 def keccackp(b, nr):
     A = convertStringToStateMatrix(b)
@@ -139,6 +148,12 @@ def keccackpTestRandString(strLen):
     print("inital string: ", testString)
     print("result string: ", result)
 
+def generateRandomList(listLen):
+    binList = [random.SystemRandom().choice([0,1])]
+    for i in range(listLen-1):
+        binList += [(random.SystemRandom().choice([0,1]))]
+    return binList
+
 def keccackpTestString(inputString):
     result = keccackp(inputString, 12 + 2*getL(len(inputString)))    
     print("inital string: ", inputString)
@@ -151,7 +166,12 @@ def timeTest(inputString):
     avg = (t2 - t1)/100
     print("avg run time = ",avg)
 
-keccackpTestRandString(100)
+
+myList = generateRandomList(100)
+myMatrix = convertStringToStateMatrix(myList) 
+
+
+# keccackpTestRandString(100)
 # keccackpTestString("1000000100000101111111100101000011001001010010110010010100011110010101101000000001101010000000000110")
 # timeTest("1000000100000101111111100101000011001001010010110010010100011110010101101000000001101010000000000110")
 # verboseTest(0)
