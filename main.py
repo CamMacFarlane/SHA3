@@ -151,7 +151,14 @@ def timeTest(inputString):
     avg = (t2 - t1)/100
     print("avg run time = ",avg)
 
-keccackpTestRandString(100)
+#CODE TO RUN
+string = generateRandomString(25)
+print(string)
+
+mat = convertStringToStateMatrix(string)
+mu.matPrint(mat, 'c', False,True)
+
+# keccackpTestRandString(100)
 # keccackpTestString("1000000100000101111111100101000011001001010010110010010100011110010101101000000001101010000000000110")
 # timeTest("1000000100000101111111100101000011001001010010110010010100011110010101101000000001101010000000000110")
 # verboseTest(0)
