@@ -1,10 +1,8 @@
 import copy
 import matrixUtils as mu
 
-w = 4
 x_len = 5
 y_len = 5
-z_len = w
 
 
 #shifts lanes by offset
@@ -27,6 +25,10 @@ def ro(mat):
 
     return matp
 
+#*******************************************************************#
+#Test functions
+
+z_len = 4
 def test():
     A = [[[0 for k in range(z_len)] for k in range(y_len)]
          for k in range(x_len)]

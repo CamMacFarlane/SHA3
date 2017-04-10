@@ -7,6 +7,7 @@ import chi
 import l
 import random
 import time
+import pad
 def verboseTest(IR):
     testString = generateRandomString(100)
     A = convertStringToStateMatrix(testString)
@@ -124,8 +125,8 @@ def convertMatrixToString(A, strlen):
     return SaS
 
 def convertMatrixToList(A, lLen):
-    AaL = list('x' * strlen)
-
+    AaL = list('x' * lLen)
+    w = getW(lLen)
     for x in range(5):
         for y in range(5):
             for z in range(w):
@@ -133,12 +134,13 @@ def convertMatrixToList(A, lLen):
     return AaL
 #keccackp takes a string b and a number of rounds nr
 def keccackp(b, nr):
+    A = convertListToString(b)
     A = convertStringToStateMatrix(b)
     l = getL(b)
 
     for ir in range((12 + 2*l - nr), (12 + 2*l -1)):
         A = RND(A,ir)
-        Sp = convertMatrixToString(A,len(b))
+        Sp = convertMatrixToList(A,len(b))
         # print("round: ", ir, "S = ", Sp)    
     return Sp
 
@@ -166,9 +168,65 @@ def timeTest(inputString):
     avg = (t2 - t1)/100
     print("avg run time = ",avg)
 
+def convertListToString(l):
+     string = ''.join(str(i) for i in l)
+     return string
+
+def keccackSponge(N, d):
+    r = 10
+    b = len(N)
+    P = N + pad.pad(r,len(N))
+    n = len(P)/r
+    if((n % 1) == 0):
+        n = int(n)
+    else:
+        print("error in keccackSponge len(P)/r is not an integer")
+
+    c = b - r
+    Plist = [0] * n
+    # print("--->", len(Plist))
+    for i in range(0,n):
+         Plist[i] = P[(i*r):(i*r + r)]
+         # print(convertListToString(Plist[i]))
+    # print(convertListToString(P))
+    # print("n = ", n)
+    # for i in range(0,n):
+    #     string = convertListToString(Plist[i])
+    #     print(string)
+    #     print(i)
+
+    S = [0] * b
+    Z = []
+    #gross
+    for i in range(0,n-1):
+        inputTof = Plist[i] + ([0] * c)
+        if (len(inputTof) != b):
+            print("len(inputTof) != b")
+            print("len(inputTof) = ", len(inputTof))
+            print("b = ", b)
+            exit()
+        for j in range(0,b):
+            inputTof[j] = int(S[j]) ^ inputTof[j] 
+        strInput = convertListToString(inputTof)    
+        S = keccackp(strInput, 12 + 2*getL(len(strInput))) 
+    
+    Z += S[:r]
+    while True:
+        if d <= len(Z):
+            return Z[:d]
+        else:
+            strInput = convertListToString(S)
+            S = keccackp(strInput, 12 + 2*getL(len(strInput))) 
+            Z += S[:r]
+
 
 myList = generateRandomList(100)
-myMatrix = convertStringToStateMatrix(myList) 
+# string = convertListToString(myList)
+# print(string)
+output = keccackSponge(myList, 200)
+print(convertListToString(output))
+# myList = generateRandomList(100)
+# myMatrix = convertStringToStateMatrix(myList) 
 
 
 # keccackpTestRandString(100)
