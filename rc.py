@@ -5,7 +5,7 @@ def rc(t):
     if(n == 0):
         return 1
     R = np.array([1,0,0,0,0,0,0,0])
-    for i in range (1,n):
+    for i in range (1,(n+1)):
         R = np.append([0],R)
         R[0] = R[0]^R[8]
         R[4] = R[4]^R[8]
@@ -22,3 +22,4 @@ def test():
         print(rc(i))
         time.sleep(1)
 
+# test()

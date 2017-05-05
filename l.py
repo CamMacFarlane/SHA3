@@ -17,10 +17,10 @@ def l(mat, ir):
     l_var = int(np.log2(w))
     RC = np.zeros(w)
 
-    for j in range(0, l_var):
+    for j in range(0, (l_var + 1)):
         RC[(2^j) - 1] = rc.rc(j + 7*ir)
-
-    for z in range(w):
+    
+    for z in range(0,w):
         matp[0][0][z] = matp[0][0][z] ^ int(RC[z])
     
     return matp

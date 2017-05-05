@@ -40,12 +40,7 @@ def convertMatrixToList(A, lLen):
             for z in range(w):
                AaL[w*(5*y + x) + z] = str(A[x][y][z])
     return AaL
-#generates a list of random bits of a desired length
-def generateRandomList(listLen):
-    binList = [random.SystemRandom().choice([0,1])]
-    for i in range(listLen-1):
-        binList += [(random.SystemRandom().choice([0,1]))]
-    return binList
+
 
 #converts a list to a 3d state matrix
 def convertListToStateMatrix(b):
@@ -74,16 +69,23 @@ def convertListToStateMatrix(b):
 def keccackp(b, nr):
     A = convertListToStateMatrix(b)
     l = getL(len(b))
-
-    for ir in range((12 + 2*l - nr), (12 + 2*l -1)):
+    print("range = ",(12 + 2*l - nr), " to ", (12 + 2*l))
+    for ir in range((12 + 2*l - nr), (12 + 2*l )):
         A = RND(A,ir)
         Sp = convertMatrixToList(A,len(b))
-        # print("round: ", ir, "S = ", Sp)    
+        digest = frombits(Sp[:224])
+        print(ir)
+        printStringAsHex(digest)
+    exit()
     return Sp
 
-def keccackSponge(N, d):
-    r = 10  #Rate, 10 is nonstandard!
-    b = 100 #Width of f
+
+#Sponge construction using Keccak
+#Set desired r for rate and b for width of Keccak function 
+def KeccakC(C, N, d):
+    b = 1600 #Width of f
+    r = b - C  #Rate, 10 is nonstandard!
+    
     #Step 1
     P = N + pad.pad(r,len(N))
     print("result of pad: ", pad.pad(r,len(N)))
@@ -91,6 +93,7 @@ def keccackSponge(N, d):
     
     #Step 2
     n = len(P)/r
+    print("n = ", n)
 
     if((n % 1) == 0):
         n = int(n)
@@ -99,6 +102,7 @@ def keccackSponge(N, d):
     
     #Step 3
     c = b - r
+    #This exists for my sanity rn but C = c
     
     #Step 4
     Plist = [0] * n
@@ -110,7 +114,7 @@ def keccackSponge(N, d):
     S = [0] * b
     
     #Step 6
-    for i in range(0,n-1):
+    for i in range(0,n):
         inputTof = Plist[i] + ([0] * c)
         print("input to f:", inputTof)
         if (len(inputTof) != b):
@@ -120,21 +124,27 @@ def keccackSponge(N, d):
             exit()
         for j in range(0,b):
             inputTof[j] = int(S[j]) ^ int(inputTof[j]) 
-        S = keccackp(inputTof, 12 + 2*getL(len(inputTof))) 
+        # print(len(inputTof))
+        # exit()
+        S = keccackp(inputTof, 24) 
+
+    #Step 7
     Z = []
+    print("S = ", S)
+    #Steps 8 - 10
     Z += S[:r]
+    print("z = ", Z,"d = ", d, "len(z) = ", len(Z))
+    
     while True:
         if d <= len(Z):
-            return Z[:d]
+            return Z[:d] #return TRUNKd(Z)
         else:
-            S = keccackp(S, 12 + 2*getL(len(S))) 
+            S = keccackp(S, 24) 
             Z += S[:r]
 
 def RND(mat, roundIndex):
-    A = copy.deepcopy(mat)
     Ap = copy.deepcopy(mat)
-    Ap = l.l(chi.chi(pi.pi(ro.ro(theta.theta(mat)))),roundIndex)
-    
+    Ap = l.l(chi.chi(pi.pi(ro.ro(theta.theta(mat)))),roundIndex)    
     return Ap
 
 def convertListToString(l):
@@ -151,11 +161,39 @@ def tobits(s):
 
 def frombits(bits):
     chars = []
-    for b in range(len(bits) / 8):
+    for b in range(int(len(bits) / 8)):
         byte = bits[b*8:(b+1)*8]
         chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
     return ''.join(chars)
 
+def printStringAsHex(s):
+    for i in range(0,len(s)):
+        hexStr = hex(ord(s[i]))
+        print(hexStr[2:], end = "")
+    print()
+
+def SHA3_224(M):
+    print("input: ", M)
+    printStringAsHex(M)
+    rawInput = tobits(M)
+
+    # print("input as bits: ", rawInput)
+    inputBitList = rawInput + [0,1]
+    print("input to KeccakC", inputBitList)
+    rawDigest = KeccakC(448, inputBitList, 224)
+    digest = frombits(rawDigest)
+    printStringAsHex(digest)
+    print("len raw Digest: ", len(rawDigest))
+SHA3_224("")
+"""
+myString = "hello world how are you ?"
+mybits = tobits(myString)
+print(len(mybits))
+myMatix = convertListToStateMatrix(mybits)
+garbled = convertMatrixToList(myMatix, len(mybits))
+print(frombits(garbled))
+"""
+"""
 myList = tobits("abc")
 print("raw input", myList)
 # myList = generateRandomList(100)
@@ -164,3 +202,4 @@ text = convertListToString(output)
 print(convertListToString(output))
 blah = int(text,2)
 print(hex(blah))
+"""

@@ -13,8 +13,8 @@ def ro(mat):
     x = 1
     w = len(mat[0][0])
     #for t = 0 to t = 23
-    for t in range(24):
-        for z in range(w):
+    for t in range(0,24):
+        for z in range(0,w):
             offset = ((t+1)*(t+2)/2)
             offset = int(offset)
             matp[x][y][z] = mat[x][y][(z - offset)%w]
