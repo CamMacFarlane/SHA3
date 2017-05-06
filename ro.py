@@ -28,7 +28,7 @@ def ro(mat):
 #*******************************************************************#
 #Test functions
 
-z_len = 4
+z_len = 8
 def test():
     A = [[[0 for k in range(z_len)] for k in range(y_len)]
          for k in range(x_len)]
@@ -38,3 +38,4 @@ def test():
     Ap = ro(A)
     print("           After Ro | Before Ro")
     mu.matPrint(Ap, 'l', True, True, A)
+# test()

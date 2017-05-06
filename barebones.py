@@ -7,7 +7,7 @@ import pi
 import chi
 import l
 import pad
-
+import binascii
 #returns w value for different approved String lengths
 def getW(lengthOfString):
     return{
@@ -76,7 +76,7 @@ def keccackp(b, nr):
         digest = frombits(Sp[:224])
         print(ir)
         printStringAsHex(digest)
-    exit()
+    # exit()
     return Sp
 
 
@@ -171,20 +171,79 @@ def printStringAsHex(s):
         hexStr = hex(ord(s[i]))
         print(hexStr[2:], end = "")
     print()
+def getStringAsHex(s):
+    ret = ""
+    for i in range(0,len(s)):
+        hexStr = hex(ord(s[i]))
+        ret = ret + hexStr[2:]    
+    
+    return ret
+
+
+def swapEndianness(string):
+    chunks = lambda iterable, sz: [iterable[i:i+sz] 
+                                   for i in range(0, len(iterable), sz)]
+    swap = ''.join([chunk[::-1] 
+                        for chunk in chunks(string, 2)])
+    return swap
 
 def SHA3_224(M):
     print("input: ", M)
-    printStringAsHex(M)
+    myhexStr = getStringAsHex(M)
+    print(myhexStr)
+
     rawInput = tobits(M)
+    
+    # rawInput = [0,0,0,1,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,1,0,1,1,0]
+    print(rawInput, " ", len(rawInput))
+    
 
     # print("input as bits: ", rawInput)
     inputBitList = rawInput + [0,1]
     print("input to KeccakC", inputBitList)
+
+
     rawDigest = KeccakC(448, inputBitList, 224)
+    
+
+    rawDigest = rawDigest[::-1]
+    digest2 = convertListToString(rawDigest)
+
+    hexDigest = hex(int(digest2,2)) 
+    print(len(hexDigest))
+    stringOfHex = str(hexDigest)
+    reversedHexDigest = stringOfHex[::-1]
+    print(reversedHexDigest[:len(hexDigest)-2])
+    swapped = swapEndianness(reversedHexDigest[:len(hexDigest)-2])
+    print(swapped)
     digest = frombits(rawDigest)
-    printStringAsHex(digest)
-    print("len raw Digest: ", len(rawDigest))
-SHA3_224("")
+    # printStringAsHex(digest)
+    # print("len raw Digest: ", len(rawDigest))
+
+SHA3_224("abc")
+# printStringAsHex("")
+def keccackTEST(b, nr):
+    A = [[[0 for k in range(8)] for k in range(5)]
+    for k in range(5)]
+    # l = 6
+    for ir in range(24):
+        A = RND(A,ir)
+        # print(A)
+        # exit()
+        Sp = convertMatrixToList(A,200)
+       
+          
+        SpR = Sp[::-1]
+        digest = convertListToString(Sp[:224])
+        # test = int(digest,2)
+        # print("TEST", hex(test))
+        # print(ir)
+        printStringAsHex(digest)
+    
+    exit()
+    return Sp
+
+# keccackTEST("noinput",24)
 """
 myString = "hello world how are you ?"
 mybits = tobits(myString)

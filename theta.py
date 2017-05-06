@@ -42,4 +42,4 @@ def test():
     print("    After theta (A') | Before theta (A)")
     mu.matPrint(Ap, 'c', True, True, A)
 
-test()
+# test()

@@ -10,7 +10,7 @@ def chi(mat):
     for x in range(x_len):
         for y in range(y_len):
             for z in range(w):
-                matp[x][y][z] = (mat[x][y][z]) ^ ((mat[(x+1)%5][y][z] ^ 1) & mat[(x+2)%5][y][z] )
+                matp[x][y][z] = ((mat[x][y][z]) ^ ((mat[(x+1)%5][y][z] ^ 1) & mat[(x+2)%5][y][z]))
     return matp
 
 
