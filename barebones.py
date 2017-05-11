@@ -74,8 +74,8 @@ def keccackp(b, nr):
         A = RND(A,ir)
         Sp = convertMatrixToList(A,len(b))
         digest = frombits(Sp[:224])
-        print(ir)
-        printStringAsHex(digest)
+        # print(ir)
+        # printStringAsHex(digest)
     # exit()
     return Sp
 
@@ -88,8 +88,8 @@ def KeccakC(C, N, d):
     
     #Step 1
     P = N + pad.pad(r,len(N))
-    print("result of pad: ", pad.pad(r,len(N)))
-    print("Padded input:", P)
+    # print("result of pad: ", pad.pad(r,len(N)))
+    # print("Padded input:", P)
     
     #Step 2
     n = len(P)/r
@@ -108,7 +108,7 @@ def KeccakC(C, N, d):
     Plist = [0] * n
     for i in range(0,n):
          Plist[i] = P[(i*r):(i*r + r)]
-         print("Plist[",i,"]",Plist[i])
+         # print("i = ", i )
     
     #Step 5
     S = [0] * b
@@ -116,7 +116,6 @@ def KeccakC(C, N, d):
     #Step 6
     for i in range(0,n):
         inputTof = Plist[i] + ([0] * c)
-        print("input to f:", inputTof)
         if (len(inputTof) != b):
             print("len(inputTof) != b")
             print("len(inputTof) = ", len(inputTof))
@@ -126,14 +125,13 @@ def KeccakC(C, N, d):
             inputTof[j] = int(S[j]) ^ int(inputTof[j]) 
         # print(len(inputTof))
         # exit()
+        print(i)
         S = keccackp(inputTof, 24) 
 
     #Step 7
     Z = []
-    print("S = ", S)
     #Steps 8 - 10
     Z += S[:r]
-    print("z = ", Z,"d = ", d, "len(z) = ", len(Z))
     
     while True:
         if d <= len(Z):
@@ -141,6 +139,7 @@ def KeccakC(C, N, d):
         else:
             S = keccackp(S, 24) 
             Z += S[:r]
+            print("d = ", d, "len Z = ", len(Z))
 
 def RND(mat, roundIndex):
     Ap = copy.deepcopy(mat)
@@ -171,6 +170,7 @@ def printStringAsHex(s):
         hexStr = hex(ord(s[i]))
         print(hexStr[2:], end = "")
     print()
+
 def getStringAsHex(s):
     ret = ""
     for i in range(0,len(s)):
@@ -180,85 +180,60 @@ def getStringAsHex(s):
     return ret
 
 
-def swapEndianness(string):
-    chunks = lambda iterable, sz: [iterable[i:i+sz] 
-                                   for i in range(0, len(iterable), sz)]
-    swap = ''.join([chunk[::-1] 
-                        for chunk in chunks(string, 2)])
-    return swap
+def chunkList(myList, chunkSize):
+    chunks = []
+    numChunks = len(myList)//chunkSize
+    print("there will be: ",numChunks, "chunks")
+    old = 0
+    for i in range(0, len(myList), chunkSize):
+        chunks = chunks + [myList[i:i+chunkSize]]
+        if(int((i/len(myList))*100) > old):
+            print(int((i/len(myList))*100),"%", end="\r")
+            old = int((i/len(myList))*100)
+    return chunks
+#reverses each byte
+def myEndiannessSwap(myBinList):
+    print("chunk List")
+    chunks = chunkList(myBinList,8)
+    ret = []
+    print("reverse chunks")
+    numChunks = len(chunks)
+    old = 0
+
+    for chunk in chunks:
+        ret = ret + chunk[::-1]
+    return ret
+
+
 
 def SHA3_224(M):
     print("input: ", M)
     myhexStr = getStringAsHex(M)
-    print(myhexStr)
-
+    # print(myhexStr)
+    print("to bits")
     rawInput = tobits(M)
-    
-    # rawInput = [0,0,0,1,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,1,0,1,1,0]
-    print(rawInput, " ", len(rawInput))
+    print("endian swap")
+    rawInput = myEndiannessSwap(rawInput)
+    # print(rawInput, " ", len(rawInput))
     
 
     # print("input as bits: ", rawInput)
     inputBitList = rawInput + [0,1]
-    print("input to KeccakC", inputBitList)
+    # print("input to KeccakC", inputBitList)
 
-
+    print("begin KeccakC")
     rawDigest = KeccakC(448, inputBitList, 224)
     
 
-    rawDigest = rawDigest[::-1]
-    digest2 = convertListToString(rawDigest)
-
-    hexDigest = hex(int(digest2,2)) 
-    print(len(hexDigest))
-    stringOfHex = str(hexDigest)
-    reversedHexDigest = stringOfHex[::-1]
-    print(reversedHexDigest[:len(hexDigest)-2])
-    swapped = swapEndianness(reversedHexDigest[:len(hexDigest)-2])
-    print(swapped)
-    digest = frombits(rawDigest)
-    # printStringAsHex(digest)
-    # print("len raw Digest: ", len(rawDigest))
-
-SHA3_224("abc")
-# printStringAsHex("")
-def keccackTEST(b, nr):
-    A = [[[0 for k in range(8)] for k in range(5)]
-    for k in range(5)]
-    # l = 6
-    for ir in range(24):
-        A = RND(A,ir)
-        # print(A)
-        # exit()
-        Sp = convertMatrixToList(A,200)
-       
-          
-        SpR = Sp[::-1]
-        digest = convertListToString(Sp[:224])
-        # test = int(digest,2)
-        # print("TEST", hex(test))
-        # print(ir)
-        printStringAsHex(digest)
+    #Swap endianness to match test vectors
+    rawDigest = myEndiannessSwap(rawDigest) 
+    stringDigest = convertListToString(rawDigest)
     
-    exit()
-    return Sp
+    #convert from binary string to hex string
+    hexDigest = hex(int(stringDigest,2)) 
 
-# keccackTEST("noinput",24)
-"""
-myString = "hello world how are you ?"
-mybits = tobits(myString)
-print(len(mybits))
-myMatix = convertListToStateMatrix(mybits)
-garbled = convertMatrixToList(myMatix, len(mybits))
-print(frombits(garbled))
-"""
-"""
-myList = tobits("abc")
-print("raw input", myList)
-# myList = generateRandomList(100)
-output = keccackSponge(myList, 50)
-text = convertListToString(output)
-print(convertListToString(output))
-blah = int(text,2)
-print(hex(blah))
-"""
+    print(len(hexDigest))
+    print(hexDigest[2:])
+myStr = 'abc'
+print(len(myStr))
+SHA3_224(myStr)
