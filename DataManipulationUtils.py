@@ -92,14 +92,8 @@ def getStringAsHex(s):
 
 def chunkList(myList, chunkSize):
     chunks = []
-    numChunks = len(myList)//chunkSize
-    # print("there will be: ",numChunks, "chunks")
-    old = 0
     for i in range(0, len(myList), chunkSize):
         chunks = chunks + [myList[i:i+chunkSize]]
-        if(int((i/len(myList))*100) > old):
-            print(int((i/len(myList))*100),"%", end="\r")
-            old = int((i/len(myList))*100)
     return chunks
 
 #reverses each byte
@@ -112,3 +106,16 @@ def myEndiannessSwap(myBinList):
     for chunk in chunks:
         ret = ret + chunk[::-1]
     return ret
+
+#returns a list of bits of the string 
+def formatStringAsBits(string):
+    bits = tobits(string)
+    bits = myEndiannessSwap(bits)
+    return bits
+
+#returns a hex string of the bits input
+def formatsBitsAsHexString(bits):
+    bits = myEndiannessSwap(bits) 
+    stringDigest = convertListToString(bits)
+    hexDigest = hex(int(stringDigest,2)) 
+    return hexDigest[2:]

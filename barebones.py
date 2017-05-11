@@ -7,19 +7,93 @@ import l
 import pad
 import DataManipulationUtils as dmu 
 
-#keccackp takes a string b and a number of rounds nr
-def keccackp(b, nr):
+#keccackf takes a string b and a number of rounds nr
+def keccackf(b, nr):
     A = dmu.convertListToStateMatrix(b)
     l = dmu.getL(len(b))
     print("range = ",(12 + 2*l - nr), " to ", (12 + 2*l))
     for ir in range((12 + 2*l - nr), (12 + 2*l )):
         A = RND(A,ir)
         Sp = dmu.convertMatrixToList(A,len(b))
-        digest = dmu.frombits(Sp[:224])
-        # print(ir)
-        # printStringAsHex(digest)
     # exit()
     return Sp
+
+#keccackp takes a string b and a number of rounds nr
+def keccackp(b, nr):
+    A = dmu.convertListToStateMatrix(b)
+    l = dmu.getL(len(b))
+    for ir in range((0), (nr)):
+        A = RND(A,ir)
+        Sp = dmu.convertMatrixToList(A,len(b))
+    return Sp
+
+def keccackRCNRM(r, c, nr, m):
+    b = r + c
+    d = 80
+    
+    #Step 1
+    P = m + pad.pad(r,len(m))
+    
+
+    #Step 2
+    n = len(P)/r
+    print("n = ", n)
+
+    if((n % 1) == 0):
+        n = int(n)
+    else:
+        print("error in keccackSponge len(P)/r is not an integer")
+    
+    #Step 3
+    #c = b - r
+    #This exists for my sanity rn but C = c
+    
+    #Step 4
+    Plist = [0] * n
+    for i in range(0,n):
+         Plist[i] = P[(i*r):(i*r + r)]
+         # print("i = ", i )
+    
+    #Step 5
+    S = [0] * b
+    
+    #Step 6
+    for i in range(0,n):
+        inputTof = Plist[i] + ([0] * c)
+        
+        if (len(inputTof) != b):
+            print("len(inputTof) != b")
+            print("len(inputTof) = ", len(inputTof))
+            print("b = ", b)
+            exit()
+        
+        for j in range(0,b):
+            inputTof[j] = int(S[j]) ^ int(inputTof[j]) 
+        # print(len(inputTof))
+        # exit()
+        # print(i)
+        S = keccackp(inputTof, nr) 
+
+    #Step 7
+    Z = []
+    #Steps 8 - 10
+    Z += S[:r]
+
+    while True:
+        if d <= len(Z):
+            matrix = dmu.convertListToStateMatrix(S)
+            mu.printLanesHex(matrix, True)
+            hexString = dmu.formatsBitsAsHexString(Z)
+            print(hexString)
+            return Z[:d] #return TRUNKd(Z)
+        else:
+            print(dmu.formatsBitsAsHexString(Z))
+            matrix = dmu.convertListToStateMatrix(S)
+            mu.printLanesHex(matrix, True)
+
+            S = keccackp(S, nr) 
+            Z += S[:r]
+            # print("d = ", d, "len Z = ", len(Z))
 
 
 #Sponge construction using Keccak
@@ -70,7 +144,7 @@ def KeccakC(C, N, d):
         # print(len(inputTof))
         # exit()
         # print(i)
-        S = keccackp(inputTof, 24) 
+        S = keccackf(inputTof, 24) 
 
     #Step 7
     Z = []
@@ -81,9 +155,8 @@ def KeccakC(C, N, d):
         if d <= len(Z):
             return Z[:d] #return TRUNKd(Z)
         else:
-            S = keccackp(S, 24) 
+            S = keccackf(S, 24) 
             Z += S[:r]
-            print("d = ", d, "len Z = ", len(Z))
 
 def RND(mat, roundIndex):
     Ap = l.l(chi.chi(pi.pi(ro.ro(theta.theta(mat)))),roundIndex)    
@@ -92,8 +165,26 @@ def RND(mat, roundIndex):
 
 def SHA3_224(M):
     print("input: ", M)
-    myhexStr = dmu.getStringAsHex(M)
-    # print(myhexStr)
+    
+    # myhexStr = dmu.getStringAsHex(M)
+    # print(myhexStr)    
+    
+    rawInput = dmu.formatStringAsBits(M)
+
+    # print("input as bits: ", rawInput)
+    inputBitList = rawInput + [0,1]
+    # print("input to KeccakC", inputBitList)
+
+    # print("begin KeccakC")
+    rawDigest = KeccakC(448, inputBitList, 224)
+    
+    print(dmu.formatsBitsAsHexString(rawDigest))
+
+    #Swap endianness to match test vectors
+    
+def SHA3_256(M):
+    print("input: ", M)
+
     rawInput = dmu.tobits(M)
     rawInput = dmu.myEndiannessSwap(rawInput)
     # print(rawInput, " ", len(rawInput))
@@ -104,7 +195,7 @@ def SHA3_224(M):
     # print("input to KeccakC", inputBitList)
 
     # print("begin KeccakC")
-    rawDigest = KeccakC(448, inputBitList, 224)
+    rawDigest = KeccakC(512, inputBitList, 256)
     
 
     #Swap endianness to match test vectors
@@ -117,6 +208,18 @@ def SHA3_224(M):
     # print(len(hexDigest))
     print(hexDigest[2:])
 
-
 myStr = 'abc'
 SHA3_224(myStr)
+
+testList = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,0,0,0,0,1,0,0,1,1,0,1,0,1,1,
+1,1,1,1,0,1,1,0,0,0,0,0,1,0,0,1,1,1,1,0,0,1,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,1,1,0,1]
+
+# D9C4F4FABE460200008069FAF4FA00000000000000000000064A1000
+# testList = [1,1,0,1,1,0,0,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
+# testList = dmu.myEndiannessSwap(testList)
+
+rawDigest = keccackRCNRM(40,160,1,testList)
+
+# print(rawDigest)
+stringDigest = dmu.formatsBitsAsHexString(rawDigest)
+print(stringDigest)
