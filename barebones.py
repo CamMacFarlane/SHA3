@@ -1,5 +1,3 @@
-import random
-import copy
 import matrixUtils as mu
 import theta
 import ro
@@ -7,73 +5,17 @@ import pi
 import chi
 import l
 import pad
-import binascii
-#returns w value for different approved String lengths
-def getW(lengthOfString):
-    return{
-    25:1,
-    50:2,
-    100:4,
-    200:8,
-    400:16,
-    800:32,
-    1600:64 
-    }.get(lengthOfString, -1);
-
-#returns l value for different approved String lengths
-def getL(lengthOfString):
-    return{
-    25:0,
-    50:1,
-    100:2,
-    200:3,
-    400:4,
-    800:5,
-    1600:6 
-    }.get(lengthOfString, -1);
-
-def convertMatrixToList(A, lLen):
-    AaL = list('x' * lLen)
-    w = getW(lLen)
-    for x in range(5):
-        for y in range(5):
-            for z in range(w):
-               AaL[w*(5*y + x) + z] = str(A[x][y][z])
-    return AaL
-
-
-#converts a list to a 3d state matrix
-def convertListToStateMatrix(b):
-    #get our z dimension
-    w = getW(len(b))
-    
-    #Ensure w is valid 
-    if(w == -1):
-        print("Invalid string length", len(b), "exiting now")
-        exit()
-    
-    #create empty 5 by 5 by w matrix
-    A = [[[0 for k in range(w)] for k in range(5)]
-        for k in range(5)]
-    
-    #populate A with contents of b
-    for x in range(5):
-        for y in range(5):
-            for z in range(w):
-                A[x][y][z] = int(b[w*(5*y + x) + z])
-    
-    #returns pointer to A
-    return A
+import DataManipulationUtils as dmu 
 
 #keccackp takes a string b and a number of rounds nr
 def keccackp(b, nr):
-    A = convertListToStateMatrix(b)
-    l = getL(len(b))
+    A = dmu.convertListToStateMatrix(b)
+    l = dmu.getL(len(b))
     print("range = ",(12 + 2*l - nr), " to ", (12 + 2*l))
     for ir in range((12 + 2*l - nr), (12 + 2*l )):
         A = RND(A,ir)
-        Sp = convertMatrixToList(A,len(b))
-        digest = frombits(Sp[:224])
+        Sp = dmu.convertMatrixToList(A,len(b))
+        digest = dmu.frombits(Sp[:224])
         # print(ir)
         # printStringAsHex(digest)
     # exit()
@@ -116,16 +58,18 @@ def KeccakC(C, N, d):
     #Step 6
     for i in range(0,n):
         inputTof = Plist[i] + ([0] * c)
+        
         if (len(inputTof) != b):
             print("len(inputTof) != b")
             print("len(inputTof) = ", len(inputTof))
             print("b = ", b)
             exit()
+        
         for j in range(0,b):
             inputTof[j] = int(S[j]) ^ int(inputTof[j]) 
         # print(len(inputTof))
         # exit()
-        print(i)
+        # print(i)
         S = keccackp(inputTof, 24) 
 
     #Step 7
@@ -142,78 +86,16 @@ def KeccakC(C, N, d):
             print("d = ", d, "len Z = ", len(Z))
 
 def RND(mat, roundIndex):
-    Ap = copy.deepcopy(mat)
     Ap = l.l(chi.chi(pi.pi(ro.ro(theta.theta(mat)))),roundIndex)    
     return Ap
-
-def convertListToString(l):
-     string = ''.join(str(i) for i in l)
-     return string
-
-def tobits(s):
-    result = []
-    for c in s:
-        bits = bin(ord(c))[2:]
-        bits = '00000000'[len(bits):] + bits
-        result.extend([int(b) for b in bits])
-    return result
-
-def frombits(bits):
-    chars = []
-    for b in range(int(len(bits) / 8)):
-        byte = bits[b*8:(b+1)*8]
-        chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
-    return ''.join(chars)
-
-def printStringAsHex(s):
-    for i in range(0,len(s)):
-        hexStr = hex(ord(s[i]))
-        print(hexStr[2:], end = "")
-    print()
-
-def getStringAsHex(s):
-    ret = ""
-    for i in range(0,len(s)):
-        hexStr = hex(ord(s[i]))
-        ret = ret + hexStr[2:]    
-    
-    return ret
-
-
-def chunkList(myList, chunkSize):
-    chunks = []
-    numChunks = len(myList)//chunkSize
-    print("there will be: ",numChunks, "chunks")
-    old = 0
-    for i in range(0, len(myList), chunkSize):
-        chunks = chunks + [myList[i:i+chunkSize]]
-        if(int((i/len(myList))*100) > old):
-            print(int((i/len(myList))*100),"%", end="\r")
-            old = int((i/len(myList))*100)
-    return chunks
-#reverses each byte
-def myEndiannessSwap(myBinList):
-    print("chunk List")
-    chunks = chunkList(myBinList,8)
-    ret = []
-    print("reverse chunks")
-    numChunks = len(chunks)
-    old = 0
-
-    for chunk in chunks:
-        ret = ret + chunk[::-1]
-    return ret
-
 
 
 def SHA3_224(M):
     print("input: ", M)
-    myhexStr = getStringAsHex(M)
+    myhexStr = dmu.getStringAsHex(M)
     # print(myhexStr)
-    print("to bits")
-    rawInput = tobits(M)
-    print("endian swap")
-    rawInput = myEndiannessSwap(rawInput)
+    rawInput = dmu.tobits(M)
+    rawInput = dmu.myEndiannessSwap(rawInput)
     # print(rawInput, " ", len(rawInput))
     
 
@@ -221,19 +103,20 @@ def SHA3_224(M):
     inputBitList = rawInput + [0,1]
     # print("input to KeccakC", inputBitList)
 
-    print("begin KeccakC")
+    # print("begin KeccakC")
     rawDigest = KeccakC(448, inputBitList, 224)
     
 
     #Swap endianness to match test vectors
-    rawDigest = myEndiannessSwap(rawDigest) 
-    stringDigest = convertListToString(rawDigest)
+    rawDigest = dmu.myEndiannessSwap(rawDigest) 
+    stringDigest = dmu.convertListToString(rawDigest)
     
     #convert from binary string to hex string
     hexDigest = hex(int(stringDigest,2)) 
 
-    print(len(hexDigest))
+    # print(len(hexDigest))
     print(hexDigest[2:])
+
+
 myStr = 'abc'
-print(len(myStr))
 SHA3_224(myStr)
