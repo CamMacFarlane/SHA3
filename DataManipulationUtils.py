@@ -1,3 +1,5 @@
+import random #for generateRandomString
+
 #returns w value for different approved String lengths
 def getW(lengthOfString):
     return{
@@ -113,9 +115,30 @@ def formatStringAsBits(string):
     bits = myEndiannessSwap(bits)
     return bits
 
+#returns a hex string of the bits input with a space between each byte
+def formatBitsAsByteSplitHexString(bits,splitString):
+    bits = myEndiannessSwap(bits) 
+    stringDigest = convertListToString(bits)
+    hexDigest = hex(int(stringDigest,2)) 
+    if (len(stringDigest)/4) % 1 == 0:    
+        hexDigest = hexDigest[2:].zfill(len(stringDigest)//4)
+    else:
+        hexDigest = hexDigest[2:].zfill((len(stringDigest)//4) + 1)
+        
+    for i in range(2, len(hexDigest) + len(hexDigest)//2, 3):
+        hexDigest = hexDigest[:i] + splitString + hexDigest[i:]
+
+    return hexDigest
+
 #returns a hex string of the bits input
 def formatsBitsAsHexString(bits):
     bits = myEndiannessSwap(bits) 
     stringDigest = convertListToString(bits)
     hexDigest = hex(int(stringDigest,2)) 
     return hexDigest[2:]
+
+def generateRandomList(listLen):
+    binList = [random.SystemRandom().choice([0,1])]
+    for i in range(listLen-1):
+        binList += [(random.SystemRandom().choice([0,1]))]
+    return binList
