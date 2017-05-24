@@ -69,6 +69,12 @@ def tobits(s):
         result.extend([int(b) for b in bits])
     return result
 
+def fromHexToBits(hexString):
+    binaryString = bin(int(hexString,16))[2:].zfill(len(hexString)*4)
+    binaryList = list(binaryString)
+    binaryList = myEndiannessSwap(binaryList)
+    return binaryList
+
 def frombits(bits):
     chars = []
     for b in range(int(len(bits) / 8)):
