@@ -28,7 +28,7 @@ def ro(mat):
 #*******************************************************************#
 #Test functions
 
-z_len = 8
+z_len = 4
 def test():
     A = [[[0 for k in range(z_len)] for k in range(y_len)]
          for k in range(x_len)]

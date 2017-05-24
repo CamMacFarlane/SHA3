@@ -1,9 +1,9 @@
-import theta
+import l
 import matrixUtils as mu
 import DataManipulationUtils as dmu
 
-fileName = "output/thetaOutput"
-numDataPoints = 1
+fileName = "output/Iota_nr_2_"
+numDataPoints = 10000
 b = 200
 
 CSVBytetarget = open(fileName + "_byteWise" +"_with_b_" + str(b) + "_dataPoints_" + str(numDataPoints) + ".csv", 'w')
@@ -27,7 +27,7 @@ for i in range(numDataPoints):
     hexInputCSVByte = dmu.formatBitsAsByteSplitHexString(binaryInput, ",")
     
     A = dmu.convertListToStateMatrix(binaryInput)
-    Ap = theta.theta(A)
+    Ap = l.l(A,2)
     
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutputTxt = dmu.formatBitsAsByteSplitHexString(binOutput, "")

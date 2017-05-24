@@ -43,11 +43,12 @@ def printStringAsHex(s):
         print(hexStr[2:], end = "")
     print()
 
-w_test = 8
+w_test = 4
 def test():
     print("start test...")
     A = [[[0 for k in range(w_test)] for k in range(y_len)] 
     for k in range(x_len)]
+    mu.populate(A)
     l_var = int(np.log2(w_test))
     
     print("l is ", l_var)
@@ -77,4 +78,4 @@ def test2():
         # print(string)
         test = int(string,2)
         print("RC[",ir,"] =", hex(test))
-# test2()
+# test()

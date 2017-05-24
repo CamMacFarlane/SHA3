@@ -31,7 +31,7 @@ def test():
     AFIPS = mu.matToFIPS(A)
     ApFIPS = mu.matToFIPS(Ap)
 
-    print("THESE SHEETS HAVE BEEN REORGANIZED TO MATCH THE INDEXING IN FIGRURE 2 OF THE FIPS SHA3 DOCUMENT")
+    print("THESE SHEETS HAVE BEEN REORGANIZED TO MATCH THE INDEXING IN FIGURE 2 OF THE FIPS SHA3 DOCUMENT")
     mu.printSheet(AFIPS , ApFIPS, "A", "A'")
 # test()    
     # uncomment the lines below for easier verificaiton of the pi funtion
