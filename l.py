@@ -21,7 +21,7 @@ def l(mat, ir):
         RC[(2**j) - 1] = rc.rc(j + 7*ir)
     
     # RCR = RC[::-1]
-    
+    print("for round ", ir, "RCtruncw = ", RC[:w])
     for z in range(0,w):
         matp[0][0][z] = matp[0][0][z] ^ int(RC[z])
     
@@ -43,7 +43,7 @@ def printStringAsHex(s):
         print(hexStr[2:], end = "")
     print()
 
-w_test = 4
+w_test = 8
 def test():
     print("start test...")
     A = [[[0 for k in range(w_test)] for k in range(y_len)] 
@@ -54,28 +54,32 @@ def test():
     print("l is ", l_var)
 
     # mu.populate(A)
-    roundIndex = 0
+    maxRoundIndex = 2
+    for roundIndex in range(0, maxRoundIndex):
+        Ap = l(A, roundIndex)
+        print("    After l (A')   | Before l (A)")
+        print(Ap[0][0], A[0][0], "\n")
+        # mu.matPrint(Ap, 'l', True, True, A)                
 
-    Ap = l(A, roundIndex)
 
-    print("    After l (A')   | Before l (A)")
-    mu.matPrint(Ap, 'l', True, True, A)                
+# print(rc.rc(0))
 
-def convertListToString(l):
-     string = ''.join(str(i) for i in l)
-     return string
 
-def test2():
-    RC = [0]*64
-    l_var = 6
-    for ir in range(24):
-        for j in range(0, (l_var + 1)):
-            RC[(2**j) - 1] = rc.rc(j + 7*ir)
+test()
+# def convertListToString(l):
+#      string = ''.join(str(i) for i in l)
+#      return string
+
+# def test2():
+#     RC = [0]*64
+#     l_var = 6
+#     for ir in range(24):
+#         for j in range(0, (l_var + 1)):
+#             RC[(2**j) - 1] = rc.rc(j + 7*ir)
         
-        # print("RC[",ir,"] =", RC, )
-        RCR = reversed(RC)
-        string = convertListToString(RCR)
-        # print(string)
-        test = int(string,2)
-        print("RC[",ir,"] =", hex(test))
-# test()
+#         # print("RC[",ir,"] =", RC, )
+#         RCR = reversed(RC)
+#         string = convertListToString(RCR)
+#         # print(string)
+#         test = int(string,2)
+#         print("RC[",ir,"] =", hex(test))

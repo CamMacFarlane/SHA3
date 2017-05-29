@@ -1,6 +1,7 @@
 import copy
 import matrixUtils as mu
-
+# import chiBreaker
+import DataManipulationUtils as dmu
 x_len = 5
 y_len = 5
 
@@ -30,3 +31,39 @@ def test():
     mu.matPrint(Ap, 'r', True, True, A)                
 
 # test()
+def testChi(row):
+    rowp = row
+    for i in range(5):
+        rowp[i] = (row[i] ^ ((row[(i+1)%5] ^ 1) & row[(i+2)%5]))
+    # print(rowp)
+    return(rowp)
+
+
+
+testRow = [1,0,0,0,1]
+
+def test2():
+    count = 0
+    for i in range(2**5):
+        row = bin(i)[2:]
+        row = row.zfill(5)
+        row = list(row)
+
+        for i in range(5):
+            row[i] = int(row[i])
+        print(row, end = "")
+        row = testChi(row)
+        print(" ->", (row))
+        # binStr = dmu.convertListToString(row)
+        # newBinStr =  chiBreaker.reverseChiRow(binStr)
+        # newrow = list(newBinStr)
+        # print(" ->", newBinStr)
+        
+test2()
+# testChi(testRow)
+
+
+
+
+
+

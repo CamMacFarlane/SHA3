@@ -1,9 +1,9 @@
-import l
+import chi
 import matrixUtils as mu
 import DataManipulationUtils as dmu
 
-fileName = "output/Iota_nr_2_"
-numDataPoints = 10000
+fileName = "output/chi"
+numDataPoints = 10
 b = 200
 
 CSVBytetarget = open(fileName + "_byteWise" +"_with_b_" + str(b) + "_dataPoints_" + str(numDataPoints) + ".csv", 'w')
@@ -27,7 +27,7 @@ for i in range(numDataPoints):
     hexInputCSVByte = dmu.formatBitsAsByteSplitHexString(binaryInput, ",")
     
     A = dmu.convertListToStateMatrix(binaryInput)
-    Ap = l.l(A,2)
+    Ap = chi.chi(A)
     
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutputTxt = dmu.formatBitsAsByteSplitHexString(binOutput, "")
