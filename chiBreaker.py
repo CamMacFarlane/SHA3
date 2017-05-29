@@ -67,22 +67,23 @@ def chiBreaker(mat):
 b = 200
 
 def test2():
-    hexInput = "1033833d72a71293fab8983dcc24ad68d3cad36ea5ba289585"    
+    hexInput = "e4a27d38b34a69506fb76e52e09f11d73edbec15c31e51690f"    
     
     binaryList = dmu.fromHexToBits(hexInput)
     A = dmu.convertListToStateMatrix(binaryList)
 
     #preimage 
     Ap = chiBreaker(A)
-    realPreimageHex = "d00fc3bd7d267e93fce0d80d4474a84cc2e6d3eca52f22b58f"
+    binOutput = dmu.convertMatrixToList(Ap, b)
+    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
+    
+    realPreimageHex = "b8a2fc30b1ca4ec027b3ce43e05110171acaee1d82b643e93b"
     binaryList = dmu.fromHexToBits(realPreimageHex)
     realPreimage = dmu.convertListToStateMatrix(binaryList)
     
     # print(App == A)    
-    binOutput = dmu.convertMatrixToList(Ap, b)
-    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     if (hexOutput == realPreimageHex):
-       print("AHHH") 
+       print("Derived preimage matches given preimage") 
     print("preimage attempt:", hexOutput)
     # mu.matPrint(Ap, 'r', True, True, realPreimage)                
 
