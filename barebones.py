@@ -30,10 +30,11 @@ def keccackp(b, nr):
 def keccackRCNRM(r, c, nr, m):
     b = r + c
     d = 80
-    
+    print("r = ", r, "c = ", c, "nr = ", nr)
+    print("original message: ", dmu.formatsBitsAsHexString(m))
     #Step 1
     P = m + pad.pad(r,len(m))
-    
+    print("Padded message ", dmu.formatsBitsAsHexString(P))   
 
     #Step 2
     n = len(P)/r
@@ -50,15 +51,18 @@ def keccackRCNRM(r, c, nr, m):
     
     #Step 4
     Plist = [0] * n
+    print("Step 4: P = ", P )
     for i in range(0,n):
          Plist[i] = P[(i*r):(i*r + r)]
-         # print("i = ", i )
+         
     
     #Step 5
     S = [0] * b
-    
+    print("step 5: S = ", S)
     #Step 6
+    print("step 6, for i in range(0,n):")
     for i in range(0,n):
+        print("i = ",i)
         inputTof = Plist[i] + ([0] * c)
         
         if (len(inputTof) != b):
@@ -69,10 +73,11 @@ def keccackRCNRM(r, c, nr, m):
         
         for j in range(0,b):
             inputTof[j] = int(S[j]) ^ int(inputTof[j]) 
-        # print(len(inputTof))
+        print("input to f = ", dmu.formatBitsAsByteSplitHexString(inputTof, " "))
         # exit()
         # print(i)
         S = keccackp(inputTof, nr) 
+        print("result of f: ", dmu.formatBitsAsByteSplitHexString(S, " "))
 
     #Step 7
     Z = []
@@ -81,16 +86,16 @@ def keccackRCNRM(r, c, nr, m):
 
     while True:
         if d <= len(Z):
-            matrix = dmu.convertListToStateMatrix(S)
-            mu.printLanesHex(matrix, True)
-            hexString = dmu.formatsBitsAsHexString(Z)
-            print(hexString)
+            # matrix = dmu.convertListToStateMatrix(S)
+            # mu.printLanesHex(matrix, True)
+            # hexString = dmu.formatsBitsAsHexString(Z)
+            # print(hexString)
             return Z[:d] #return TRUNKd(Z)
         else:
-            print(dmu.formatsBitsAsHexString(Z))
-            matrix = dmu.convertListToStateMatrix(S)
-            mu.printLanesHex(matrix, True)
-
+            # print(dmu.formatsBitsAsHexString(Z))
+            # matrix = dmu.convertListToStateMatrix(S)
+            # mu.printLanesHex(matrix, True)
+            print("d > len(Z) so squeeze: ")
             S = keccackp(S, nr) 
             Z += S[:r]
             # print("d = ", d, "len Z = ", len(Z))
@@ -157,9 +162,33 @@ def KeccakC(C, N, d):
         else:
             S = keccackf(S, 24) 
             Z += S[:r]
-
 def RND(mat, roundIndex):
-    Ap = l.l(chi.chi(pi.pi(ro.ro(theta.theta(mat)))),roundIndex)    
+    Ap = theta.theta(mat)    
+
+    Sp = dmu.convertMatrixToList(Ap,200)
+    print("result of theta: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
+    
+    Ap = ro.ro(Ap)
+    
+    Sp = dmu.convertMatrixToList(Ap,200)
+    print("result of rho: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
+    
+    Ap = pi.pi(Ap)
+    
+    Sp = dmu.convertMatrixToList(Ap,200)
+    print("result of pi: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
+    
+    Ap = chi.chi(Ap)
+
+    Sp = dmu.convertMatrixToList(Ap,200)
+    print("result of chi: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
+    
+    Ap = l.l(Ap,roundIndex)
+    
+    Sp = dmu.convertMatrixToList(Ap,200)
+    print("result of Iota: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
+    
+
     return Ap
 
 
@@ -208,18 +237,22 @@ def SHA3_256(M):
     # print(len(hexDigest))
     print(hexDigest[2:])
 
-myStr = 'abc'
-SHA3_224(myStr)
+# myStr = 'abc'
+# SHA3_224(myStr)
 
 testList = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,0,0,0,0,1,0,0,1,1,0,1,0,1,1,
 1,1,1,1,0,1,1,0,0,0,0,0,1,0,0,1,1,1,1,0,0,1,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,1,1,0,1]
+testList = [1,0,1,1,0]
+print("Message",testList)
 
-# D9C4F4FABE460200008069FAF4FA00000000000000000000064A1000
-# testList = [1,1,0,1,1,0,0,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
+print("message length (binary)",len(testList))
+
+# # D9C4F4FABE460200008069FAF4FA00000000000000000000064A1000
+# # testList = [1,1,0,1,1,0,0,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
 # testList = dmu.myEndiannessSwap(testList)
 
-rawDigest = keccackRCNRM(40,160,1,testList)
+rawDigest = keccackRCNRM(40,160,2,testList)
 
 # print(rawDigest)
-stringDigest = dmu.formatsBitsAsHexString(rawDigest)
+stringDigest = dmu.formatBitsAsByteSplitHexString(rawDigest, " ")
 print(stringDigest)

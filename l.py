@@ -21,7 +21,7 @@ def l(mat, ir):
         RC[(2**j) - 1] = rc.rc(j + 7*ir)
     
     # RCR = RC[::-1]
-    print("for round ", ir, "RCtruncw = ", RC[:w])
+    # print("for round ", ir, "RCtruncw = ", RC[:w])
     for z in range(0,w):
         matp[0][0][z] = matp[0][0][z] ^ int(RC[z])
     
@@ -65,7 +65,7 @@ def test():
 # print(rc.rc(0))
 
 
-test()
+# test()
 # def convertListToString(l):
 #      string = ''.join(str(i) for i in l)
 #      return string

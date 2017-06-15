@@ -37,6 +37,12 @@ def reverseChiRow(row):
         "11110" : "11100",
         "11111" : "11111",
     }[row]
+def quicktest():
+    for i in range(32):
+        binary = str(format(i,'b').zfill(5))
+        result = reverseChiRow(binary)
+        intResult = int(result, 2)
+        print(i, binary, result, intResult)
 
 def chiBreaker(mat):
     matp = copy.deepcopy(mat)
@@ -87,4 +93,5 @@ def test2():
     print("preimage attempt:", hexOutput)
     # mu.matPrint(Ap, 'r', True, True, realPreimage)                
 
-test2()
+# test2()
+# quicktest()

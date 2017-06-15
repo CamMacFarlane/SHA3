@@ -49,11 +49,11 @@ def test2():
         row = row.zfill(5)
         row = list(row)
 
-        for i in range(5):
-            row[i] = int(row[i])
-        print(row, end = "")
+        for j in range(5):
+            row[j] = int(row[j])
+        print(i, row, "\n")
         row = testChi(row)
-        print(" ->", (row))
+        # print(" ->", (row))
         # binStr = dmu.convertListToString(row)
         # newBinStr =  chiBreaker.reverseChiRow(binStr)
         # newrow = list(newBinStr)

@@ -148,3 +148,4 @@ def generateRandomList(listLen):
     for i in range(listLen-1):
         binList += [(random.SystemRandom().choice([0,1]))]
     return binList
+    

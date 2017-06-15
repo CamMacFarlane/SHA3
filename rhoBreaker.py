@@ -7,7 +7,7 @@ y_len = 5
 
 
 #shifts lanes by offset
-def roBreaker(mat):
+def rhoBreaker(mat):
     matp = copy.deepcopy(mat)
     z = 0
     y = 0
@@ -58,4 +58,4 @@ def test2():
     print(hexOutput)
 
 
-test2()
+# test2()
