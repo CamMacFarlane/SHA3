@@ -3,6 +3,7 @@ import theta, ro, pi, chi, l, pad
 import rhoBreaker, chiBreaker, piBreaker, iotaBreaker
 import DataManipulationUtils as dmu 
 import random
+
 b = 200
 
 def partRND(mat, roundIndex, verbose = False):
@@ -59,7 +60,8 @@ def test():
     plainTextBin = dmu.generateRandomList(b)
     planTextHex = dmu.formatBitsAsByteSplitHexString(plainTextBin, "")
 
-    print("Input to partRND:", planTextHex, len(planTextHex))
+    print("b = ",b, "ir = ", ir)
+    print("Input to partRND:", planTextHex)
 
     A = dmu.convertListToStateMatrix(plainTextBin)
 
@@ -75,7 +77,7 @@ def test():
     binOutput2 = dmu.convertMatrixToList(RecoveredMatrix, b)
     hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
     
-    print(hexOutput2, len(hexOutput2))
+    print("Output of undoPartRND function: ", hexOutput2)
 
     if(hexOutput2 == planTextHex):
         print("Successful recovery")
@@ -83,6 +85,9 @@ def test():
 
         print("Fail!")
         exit()
-    
-while(True):
-    test()
+
+#One of the main issues with reversing SHA/Keccak is that the digest we get is a tuncated version of the state, so we really only know 80/200 bits :/
+#Maybe collision will be easier ?
+
+
+test()
