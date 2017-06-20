@@ -1,18 +1,20 @@
 import matrixUtils as mu
 import theta, ro, pi, chi, l, pad
-import rhoBreaker, chiBreaker, piBreaker, iotaBreaker
+import rhoBreaker, chiBreaker, piBreaker, iotaBreaker, thetaBreaking
 import DataManipulationUtils as dmu 
 import random
 
 b = 200
 
-def partRND(mat, roundIndex, verbose = False):
-    # Ap = theta.theta(mat)    
+def RND(mat, roundIndex, verbose = False):
 
-    # Sp = dmu.convertMatrixToList(Ap,b)
-    # print("result of theta: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
+    Ap = theta.theta(mat)    
+
+    if(verbose):
+        Sp = dmu.convertMatrixToList(Ap,b)
+        print("result of theta: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
     
-    Ap = ro.ro(mat)
+    Ap = ro.ro(Ap)
     
     if(verbose):
         Sp = dmu.convertMatrixToList(Ap,b)
@@ -38,7 +40,7 @@ def partRND(mat, roundIndex, verbose = False):
 
     return Ap
 
-def undoPartRND(mat, roundIndex, verbose = False):
+def undoRND(mat, roundIndex, verbose = False):
     # Ap = theta.theta(mat)    
 
     # Sp = dmu.convertMatrixToList(Ap,b)
@@ -48,7 +50,7 @@ def undoPartRND(mat, roundIndex, verbose = False):
     Ap = chiBreaker.chiBreaker(Ap)
     Ap = piBreaker.piBreaker(Ap)
     Ap = rhoBreaker.rhoBreaker(Ap)
-    
+    Ap = thetaBreaking.thetaBreaker(Ap)    
    
 
     return Ap
@@ -61,23 +63,23 @@ def test():
     planTextHex = dmu.formatBitsAsByteSplitHexString(plainTextBin, "")
 
     print("b = ",b, "ir = ", ir)
-    print("Input to partRND:", planTextHex)
+    print("Input to RND:", planTextHex)
 
     A = dmu.convertListToStateMatrix(plainTextBin)
 
-    Ap = partRND(A,ir)
+    Ap = RND(A,ir)
     
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     
-    print("Output of partRND: ", hexOutput)
+    print("Output of RND: ", hexOutput)
 
-    RecoveredMatrix = undoPartRND(Ap, ir)
+    RecoveredMatrix = undoRND(Ap, ir)
     
     binOutput2 = dmu.convertMatrixToList(RecoveredMatrix, b)
     hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
     
-    print("Output of undoPartRND function: ", hexOutput2)
+    print("Output of undoRND function: ", hexOutput2)
 
     if(hexOutput2 == planTextHex):
         print("Successful recovery")

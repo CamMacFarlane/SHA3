@@ -275,7 +275,7 @@ def xOrPlaneWithMatrix(mat,plane):
 
 def test():
 
-    hexInput = "137e6fce40ea4b1adb07145b716ea7dc573dfd76ab3e3b1ea3"    
+    hexInput = "7c03283e0432753bddbf47c755cc6e774bdf3cea24d76ca0ab"    
     binaryList = dmu.fromHexToBits(hexInput)
 
     print(hexInput)
@@ -322,7 +322,21 @@ def test():
     hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     
     print(hexOutput)
+def test2():
+    hexInput = "7c03283e0432753bddbf47c755cc6e774bdf3cea24d76ca0ab"    
+    binaryList = dmu.fromHexToBits(hexInput)
 
+    print(hexInput)
+
+    Ap = dmu.convertListToStateMatrix(binaryList)
+
+    w = len(Ap[0][0])
+    b = w*x_len*y_len
+    A = thetaBreaker(Ap)
+    binOutput = dmu.convertMatrixToList(A, b)
+    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
+    print(hexOutput)
+    
 def test3():
 
     A = [[[0 for k in range(test_w)] for k in range(y_len)]
@@ -381,5 +395,28 @@ def test3():
     # mu.matPrint(Ap, 'c', True, True, A)
     
     # options = reverseTheta(Ap)
+def thetaBreaker(mat):
+    matp = copy.deepcopy(mat)
+    w = len(mat[0][0])
+    
+    planep = [[0 for k in range(w)] for k in range(x_len)]
+    recoveredPlane = [[0 for k in range(w)] for k in range(x_len)]
+    diffPlane = [[0 for k in range(w)] for k in range(x_len)]
 
-test()
+    for x in range(5):
+        for z in range(w):
+            planep[x][z] = C(matp, x,z)
+    
+
+    recoveredPlane = planeBreaker(planep)
+    for x in range(5):
+        for z in range(w):
+            diffPlane[x][z] = recoveredPlane[x][z] ^ planep[x][z]
+    
+    preImage = xOrPlaneWithMatrix(matp, diffPlane)
+    
+
+    return preImage
+    
+test2()
+
