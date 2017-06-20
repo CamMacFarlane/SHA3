@@ -33,16 +33,6 @@ def theta(mat):
 #*******************************************************************#
 #Test functions
 test_w = 4
-def test():
-
-    A = [[[0 for k in range(test_w)] for k in range(y_len)]
-         for k in range(x_len)]
-
-    mu.populate(A)
-
-    Ap = theta(A) 
-    print("    After theta (A') | Before theta (A)")
-    mu.matPrint(Ap, 'c', True, True, A)
 
 # test()
 def randomlyPopulatePlane(plane):
@@ -181,12 +171,14 @@ def checkIfCandidateIsValid(candidate, c_prime):
         # print("Candidate!")
     return validCandidate
 
-def planeBreaker(c_prime, c_target):
+def planeBreaker(c_prime):
     x_len = 5
-    w = 4
-    numCandidates = 0    
+    w = len(c_prime[0])
+    last_index = w - 1
     ret = False
+    numCandidates = 0
     #Iterating thru all possible first row combinations for D
+    final_C_candidate = [[0 for k in range(w)] for k in range(x_len)]
     for i in range(32):
         D_candidate = [[0 for k in range(w)] for k in range(x_len)]
         C_candidate = [[0 for k in range(w)] for k in range(x_len)]
@@ -194,18 +186,18 @@ def planeBreaker(c_prime, c_target):
         
         #Create test D
         populateRowCandidate(D_first_row_candidate, i)
-        replaceRow(D_candidate,3,D_first_row_candidate)
+        replaceRow(D_candidate, last_index, D_first_row_candidate)
         
         D_row = D_first_row_candidate
         C_row = [0,0,0,0,0]
 
         #Fill in first row of C_candidate based on D guess        
-        C_prime_row = getRow(c_prime,3)
+        C_prime_row = getRow(c_prime,last_index)
         
         for k in range(5):
             C_row[k] = C_prime_row[k]^D_row[k]
         
-        replaceRow(C_candidate,3,C_row)
+        replaceRow(C_candidate,last_index ,C_row)
         # print("start")
         # print("C Candidate:")
         # printPlane(C_candidate)
@@ -220,7 +212,7 @@ def planeBreaker(c_prime, c_target):
         # printPlane(D_candidate)
    
         #Iterate thru the rest of the rows in C
-        for j in range(2,-1, -1):
+        for j in range(last_index - 1,-1, -1):
             
             next_C_row = [0,0,0,0,0]
             for k in range(5):
@@ -260,20 +252,76 @@ def planeBreaker(c_prime, c_target):
     
         if(checkIfCandidateIsValid(C_candidate, c_prime)):
             numCandidates = numCandidates + 1
-            match = True
-            for x in range(x_len):
-                for z in range(w):
-                    if(C_candidate[x][z] != c_target[x][z]):
-                        match = False
-            if(match == True):
-                # print("MATCH")
-                ret = True
-                
+            final_C_candidate = C_candidate
+                            
         if(numCandidates > 1):
             print("more than one candidate!")
             exit()
 
-    return ret
+    return final_C_candidate 
+
+def xOrPlaneWithMatrix(mat,plane):
+    w = len(mat[0][0])
+
+    x_len = y_len = 5
+    newMatrix = [[[0 for k in range(w)] for k in range(y_len)]
+         for k in range(x_len)]
+
+    for x in range(x_len):
+        for y in range(y_len):
+            for z in range(w):
+                newMatrix[x][y][z] = mat[x][y][z] ^ plane[x][z]
+    return newMatrix
+
+def test():
+
+    hexInput = "137e6fce40ea4b1adb07145b716ea7dc573dfd76ab3e3b1ea3"    
+    binaryList = dmu.fromHexToBits(hexInput)
+
+    print(hexInput)
+
+    Ap = dmu.convertListToStateMatrix(binaryList)
+
+    w = len(Ap[0][0])
+    b = w*x_len*y_len
+    
+    # Ap = theta(A) 
+    # print("    After theta (A') | Before theta (A)")
+    # mu.matPrint(Ap, 'c', True, True, A)
+    # binDigest = dmu.convertMatrixToList(Ap, b)
+    # hexDigest = dmu.formatBitsAsByteSplitHexString(binDigest, "")
+    # print(hexDigest)
+    planep = [[0 for k in range(w)] for k in range(x_len)]
+    recoveredPlane = [[0 for k in range(w)] for k in range(x_len)]
+    plane = [[0 for k in range(w)] for k in range(x_len)]
+    testPlane = [[0 for k in range(w)] for k in range(x_len)]
+
+    # for x in range(5):
+        # for z in range(w):
+            # plane[x][z] = C(A, x,z)
+    
+    for x in range(5):
+        for z in range(w):
+            planep[x][z] = C(Ap, x,z)
+    
+
+    recoveredPlane = planeBreaker(planep)
+    
+    for x in range(5):
+        for z in range(w):
+            testPlane[x][z] = recoveredPlane[x][z] ^ planep[x][z]
+    
+    # printPlane(testPlane)
+    # printPlane(recoveredPlane)
+    # printPlane(planep)
+    preImage = xOrPlaneWithMatrix(Ap, testPlane)
+    # mu.matPrint(A, 'c', True, True, preImage)
+    
+
+    binOutput = dmu.convertMatrixToList(preImage, b)
+    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
+    
+    print(hexOutput)
 
 def test3():
 
@@ -307,7 +355,7 @@ def test3():
     string = dmu.convertListToString(D_rowReal)
     intOfDRow = int(string,2)
     # print(intOfDRow)
-    return planeBreaker(planep, plane)
+    return planeBreaker(planep)
     # print(countOnes(planep))
     # planes = reverseD(planep)
     # printPlane(planes[0])
@@ -334,9 +382,4 @@ def test3():
     
     # options = reverseTheta(Ap)
 
-iterations = 1000000
-for i in range(1,iterations):
-    if(test3() != True):
-        print("FAIL")
-        exit() 
-    print(i, i/iterations,"\r", end="")
+test()
