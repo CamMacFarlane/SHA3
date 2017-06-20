@@ -88,8 +88,20 @@ def test():
         print("Fail!")
         exit()
 
-#One of the main issues with reversing SHA/Keccak is that the digest we get is a tuncated version of the state, so we really only know 80/200 bits :/
-#Maybe collision will be easier ?
+def test2():
+    hexInput = "024a5518e1e95db53219000000000000000000000000000000"
+    binaryList = dmu.fromHexToBits(hexInput)
 
+    print(hexInput)
 
+    Ap = dmu.convertListToStateMatrix(binaryList)
+    RecoveredMatrix = undoRND(Ap, 1)
+    RecoveredMatrix = undoRND(RecoveredMatrix, 0)
+
+    binOutput2 = dmu.convertMatrixToList(RecoveredMatrix, b)
+    hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
+    
+    print("Output of undoRND function: ", hexOutput2)
+
+    
 test()
