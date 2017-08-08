@@ -59,7 +59,7 @@ def test2():
         # newrow = list(newBinStr)
         # print(" ->", newBinStr)
         
-# test2()
+# tesot2()
 # testChi(testRow)
 
 

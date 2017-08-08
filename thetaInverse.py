@@ -171,7 +171,7 @@ def checkIfCandidateIsValid(candidate, c_prime):
         # print("Candidate!")
     return validCandidate
 
-def planeBreaker(c_prime):
+def planeInverse(c_prime):
     x_len = 5
     w = len(c_prime[0])
     last_index = w - 1
@@ -180,6 +180,7 @@ def planeBreaker(c_prime):
     #Iterating thru all possible first row combinations for D
     final_C_candidate = [[0 for k in range(w)] for k in range(x_len)]
     for i in range(32):
+        # print("Start \n\n")
         D_candidate = [[0 for k in range(w)] for k in range(x_len)]
         C_candidate = [[0 for k in range(w)] for k in range(x_len)]
         D_first_row_candidate = [0,0,0,0,0]
@@ -187,76 +188,26 @@ def planeBreaker(c_prime):
         #Create test D
         populateRowCandidate(D_first_row_candidate, i)
         replaceRow(D_candidate, last_index, D_first_row_candidate)
-        
-        D_row = D_first_row_candidate
-        C_row = [0,0,0,0,0]
 
-        #Fill in first row of C_candidate based on D guess        
-        C_prime_row = getRow(c_prime,last_index)
         
         for k in range(5):
-            C_row[k] = C_prime_row[k]^D_row[k]
+            C_candidate[k][last_index] = c_prime[k][last_index]^D_candidate[k][last_index]
+
         
-        replaceRow(C_candidate,last_index ,C_row)
-        # print("start")
-        # print("C Candidate:")
-        # printPlane(C_candidate)
-        # print("C Real:")
-        # printPlane(c_target)
-        # print("C'")
-        # printPlane(c_prime)
-        # print("D")
-        # printPlane(D_candidate)
- 
-        # print("D")
-        # printPlane(D_candidate)
-   
-        #Iterate thru the rest of the rows in C
-        for j in range(last_index - 1,-1, -1):
-            
-            next_C_row = [0,0,0,0,0]
+        for j in range(last_index-1,-1,-1):
             for k in range(5):
-                next_C_row[k] = C_row[(k - 2)%5] ^ D_row[(k-1)%5]
-              
-            replaceRow(C_candidate,j ,next_C_row)
-            
-            #populate nex D row based on C ^ C'
-            C_prime_row = getRow(c_prime,j)
+                C_candidate[k][j] = C_candidate[(k-2)%5][j+1] ^ D_candidate[(k-1)%5][j+1]
             for k in range(5):
-                D_row[k] = C_prime_row[k]^next_C_row[k]
-                C_row[k] = next_C_row[k]
-            replaceRow(D_candidate,j,D_row)  
-            # print("------------------")
-            # print("C:")
-            # printPlane(C_candidate)
-            # print("C Real:")
-            # printPlane(c_target)
-            
-            # print("C'")
-            # printPlane(c_prime)
-            # print("D")
-            # printPlane(D_candidate)
-            # print(C_row)
-        # printPlane(C_candidate)
-
-
-
-        # print("C'")
-        # printPlane(c_prime)
-        # print("D")
-        # printPlane(D_candidate)
-
-        # print("C:")
-        # printPlane(C_candidate)
-
+                D_candidate[k][j] = C_candidate[k][j] ^ c_prime[k][j] 
     
         if(checkIfCandidateIsValid(C_candidate, c_prime)):
             numCandidates = numCandidates + 1
             final_C_candidate = C_candidate
+            # exit()
                             
         if(numCandidates > 1):
             print("more than one candidate!")
-            exit()
+            return -1
 
     return final_C_candidate 
 
@@ -273,129 +224,8 @@ def xOrPlaneWithMatrix(mat,plane):
                 newMatrix[x][y][z] = mat[x][y][z] ^ plane[x][z]
     return newMatrix
 
-def test():
-
-    hexInput = "7c03283e0432753bddbf47c755cc6e774bdf3cea24d76ca0ab"    
-    binaryList = dmu.fromHexToBits(hexInput)
-
-    print(hexInput)
-
-    Ap = dmu.convertListToStateMatrix(binaryList)
-
-    w = len(Ap[0][0])
-    b = w*x_len*y_len
-    
-    # Ap = theta(A) 
-    # print("    After theta (A') | Before theta (A)")
-    # mu.matPrint(Ap, 'c', True, True, A)
-    # binDigest = dmu.convertMatrixToList(Ap, b)
-    # hexDigest = dmu.formatBitsAsByteSplitHexString(binDigest, "")
-    # print(hexDigest)
-    planep = [[0 for k in range(w)] for k in range(x_len)]
-    recoveredPlane = [[0 for k in range(w)] for k in range(x_len)]
-    plane = [[0 for k in range(w)] for k in range(x_len)]
-    testPlane = [[0 for k in range(w)] for k in range(x_len)]
-
-    # for x in range(5):
-        # for z in range(w):
-            # plane[x][z] = C(A, x,z)
-    
-    for x in range(5):
-        for z in range(w):
-            planep[x][z] = C(Ap, x,z)
-    
-
-    recoveredPlane = planeBreaker(planep)
-    
-    for x in range(5):
-        for z in range(w):
-            testPlane[x][z] = recoveredPlane[x][z] ^ planep[x][z]
-    
-    # printPlane(testPlane)
-    # printPlane(recoveredPlane)
-    # printPlane(planep)
-    preImage = xOrPlaneWithMatrix(Ap, testPlane)
-    # mu.matPrint(A, 'c', True, True, preImage)
-    
-
-    binOutput = dmu.convertMatrixToList(preImage, b)
-    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
-    
-    print(hexOutput)
-def test2():
-    hexInput = "7c03283e0432753bddbf47c755cc6e774bdf3cea24d76ca0ab"    
-    binaryList = dmu.fromHexToBits(hexInput)
-
-    print(hexInput)
-
-    Ap = dmu.convertListToStateMatrix(binaryList)
-
-    w = len(Ap[0][0])
-    b = w*x_len*y_len
-    A = thetaBreaker(Ap)
-    binOutput = dmu.convertMatrixToList(A, b)
-    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
-    print(hexOutput)
-    
-def test3():
-
-    A = [[[0 for k in range(test_w)] for k in range(y_len)]
-         for k in range(x_len)]
-
-    mu.populate(A)
-    plane = [[0 for k in range(test_w)] for k in range(x_len)]
-    planep = [[0 for k in range(test_w)] for k in range(x_len)]
-    
-    for x in range(5):
-        for z in range(test_w):
-            plane[x][z] = C(A, x,z)
-    # print("C:")
-    # printPlane(plane)
-    b = performD(plane)    
-    # print("D:")
-    # printPlane(b)
-    # print(countOnes(b))
-    # print("----------------------------")
-
-    Ap = theta(A) 
-    for x in range(5):
-        for z in range(4):
-            planep[x][z] = C(Ap, x,z)
-    # print("C':")
-    # printPlane(planep)
-
-#cancer
-    D_rowReal = getRow(b,3)
-    string = dmu.convertListToString(D_rowReal)
-    intOfDRow = int(string,2)
-    # print(intOfDRow)
-    return planeBreaker(planep)
-    # print(countOnes(planep))
-    # planes = reverseD(planep)
-    # printPlane(planes[0])
-    # print(countOnes(planes[0]))
-    # printPlane(planes[1])
-    # print(countOnes(planes[1]))
    
-    # originalGreaterthanTen = countOnes(b) >= 10
-    # newLessThanOriginal = countOnes(planep) <= countOnes(b) 
-    
-    # print(originalGreaterthanTen)
-    # print(newLessThanOriginal)
-    # print(originalGreaterthanTen and newLessThanOriginal)
-    # if(originalGreaterthanTen):
-    #    print(newLessThanOriginal)
-    # else:
-    #     print(newLessThanOriginal == False)
-    # exit()
-    
-
-
-    # print("    After theta (A') | Before theta (A)")
-    # mu.matPrint(Ap, 'c', True, True, A)
-    
-    # options = reverseTheta(Ap)
-def thetaBreaker(mat):
+def thetaInverse(mat):
     matp = copy.deepcopy(mat)
     w = len(mat[0][0])
     
@@ -408,7 +238,9 @@ def thetaBreaker(mat):
             planep[x][z] = C(matp, x,z)
     
 
-    recoveredPlane = planeBreaker(planep)
+    recoveredPlane = planeInverse(planep)
+    if(recoveredPlane == -1):
+        return -1
     for x in range(5):
         for z in range(w):
             diffPlane[x][z] = recoveredPlane[x][z] ^ planep[x][z]
@@ -418,5 +250,25 @@ def thetaBreaker(mat):
 
     return preImage
     
-# test2()
+def test():
+    b = 200
+    binaryList = dmu.generateRandomList(b)    
+    hexInputTxt = dmu.formatBitsAsByteSplitHexString(binaryList, "")
+    # print("A   = ",hexInputTxt)
 
+    A = dmu.convertListToStateMatrix(binaryList)
+    w = len(A[0][0])
+
+    Ap = theta(A)
+
+    binOutput1 = dmu.convertMatrixToList(Ap, b)
+    hexOutput1 = dmu.formatBitsAsByteSplitHexString(binOutput1, "")
+    # print("A'  = ",hexOutput1)
+    App = thetaInverse(Ap)
+    if(App == -1):
+        print(hexInput)
+        print(hexOutput1)
+        exit()
+    binOutput = dmu.convertMatrixToList(App, b)
+    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
+    # print("A'' = ",hexOutput)

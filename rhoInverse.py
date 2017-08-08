@@ -7,7 +7,7 @@ y_len = 5
 
 
 #shifts lanes by offset
-def rhoBreaker(mat):
+def rhoInverse(mat):
     matp = copy.deepcopy(mat)
     z = 0
     y = 0
@@ -33,15 +33,18 @@ def test():
     binaryInput = dmu.generateRandomList(b)    
     hexInputTxt = dmu.formatBitsAsByteSplitHexString(binaryInput, "")
     print("input to rho: ", hexInputTxt)
+    print(binaryInput)
     A = dmu.convertListToStateMatrix(binaryInput)
     Ap = ro.ro(A)
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutputTxt = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     print("Output from rho: ", hexOutputTxt)
-    App = roBreaker(Ap)
+    print(binOutput)
+    App = rhoInverse(Ap)
     binOutput2 = dmu.convertMatrixToList(App, b)
     hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
-    print("Output from roBreaker: ", hexOutput2)
+    print(binOutput2)
+    print("Output from roInverse: ", hexOutput2)
     if(hexOutput2 == hexInputTxt):
         print("SUCCESS")
 
@@ -50,7 +53,7 @@ def test2():
     
     binaryList = dmu.fromHexToBits(hexInput)
     A = dmu.convertListToStateMatrix(binaryList)
-    Ap = roBreaker(A)
+    Ap = roInverse(A)
 
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
@@ -58,4 +61,4 @@ def test2():
     print(hexOutput)
 
 
-# test2()
+# test()

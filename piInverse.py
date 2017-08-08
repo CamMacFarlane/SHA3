@@ -1,11 +1,12 @@
 import copy
 import matrixUtils as mu
 import DataManipulationUtils as dmu
+import pi
 
 x_len = 5
 y_len = 5
 
-def piBreaker(mat):
+def piInverse(mat):
     x_len = len(mat)
     y_len = len(mat[0])
     z_len = len(mat[0][0])
@@ -24,11 +25,28 @@ def test():
     binaryList = dmu.fromHexToBits(hexInput)
     A = dmu.convertListToStateMatrix(binaryList)
     
-    Ap = piBreaker(A)
+    Ap = piInverse(A)
 
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     
     print(hexOutput)
 
-# test()
+
+def test2():
+    binaryList = dmu.generateRandomList(b)
+    hexInput = dmu.formatBitsAsByteSplitHexString(binaryList, "")
+    print("A = ", hexInput)
+    A = dmu.convertListToStateMatrix(binaryList)
+    Ap = pi.pi(A)
+    binOutput = dmu.convertMatrixToList(Ap, b)
+    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
+
+    print("A':", hexOutput)
+    App = piInverse(Ap) 
+    # iotaInverse(A, ir)
+    binOutput = dmu.convertMatrixToList(App, b)
+    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
+    
+    print("A'':",hexOutput)
+# test2()

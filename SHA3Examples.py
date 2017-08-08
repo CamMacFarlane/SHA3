@@ -6,7 +6,7 @@ import chi
 import l
 import pad
 import DataManipulationUtils as dmu 
-import breaker
+# import fullRoundInversion
 #keccackf takes a string b and a number of rounds nr
 def keccackf(b, nr):
     A = dmu.convertListToStateMatrix(b)
@@ -237,34 +237,3 @@ def SHA3_256(M):
     # print(len(hexDigest))
     print(hexDigest[2:])
 
-# myStr = 'abc'
-# SHA3_224(myStr)
-
-# testList = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,0,0,0,0,1,0,0,1,1,0,1,0,1,1,
-# 1,1,1,1,0,1,1,0,0,0,0,0,1,0,0,1,1,1,1,0,0,1,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,1,1,0,1]
-# testList = [1,0,1,1,0]
-# print("Message",testList)
-
-# print("message length (binary)",len(testList))
-
-# # # D9C4F4FABE460200008069FAF4FA00000000000000000000064A1000
-# # # testList = [1,1,0,1,1,0,0,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
-# # testList = dmu.myEndiannessSwap(testList)
-
-# rawDigest = keccackRCNRM(40,160,2,testList)
-
-# # print(rawDigest)
-# stringDigest = dmu.formatBitsAsByteSplitHexString(rawDigest, " ")
-# print(stringDigest)
-
-
-
-# hexInput = "c879ad05d0724581fb471a0248bdf51df8f7bae24aef6d58da"
-
-# binInput = dmu.fromHexToBits(hexInput)
-
-# rawDigest = keccackRCNRM(40,160,2,binInput)
-
-# stringDigest = dmu.formatBitsAsByteSplitHexString(rawDigest, " ")
-
-# print(stringDigest)
