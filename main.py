@@ -168,6 +168,7 @@ def timeTest(inputString):
     avg = (t2 - t1)/100
     print("avg run time = ",avg)
 
+
 def convertListToString(l):
      string = ''.join(str(i) for i in l)
      return string
