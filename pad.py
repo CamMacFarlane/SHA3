@@ -4,6 +4,4 @@ def pad(x,m):
     ret = [1]
     ret += z
     ret += [1]
-    print(ret)
-
-pad(10,7)    
+    return ret

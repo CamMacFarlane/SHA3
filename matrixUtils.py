@@ -1,5 +1,7 @@
 from random import randint
 import copy
+import DataManipulationUtils as dmu 
+
 x_len = 5
 y_len = 5
 z_len = 0
@@ -59,6 +61,25 @@ def printLanes(mat, label):
                 print("X =", x , "Y =", y , " : ", end="")
             for z in range(z_len):
                 print(mat[x][y][z], end="")
+    print()    
+
+def printLanesHex(mat, label):
+    binstr = []
+    x_len = 5
+    y_len = 5
+    z_len = len(mat[0][0])
+    for x in range(x_len):
+        for y in range(y_len):            
+            print()
+            if label == True:
+                print("X =", x , "Y =", y , " : ", end="")
+            for z in range(z_len):
+                # print(mat[x][y][z], end="")
+                binstr = binstr + [mat[x][y][z]]
+            print(binstr, end="")
+            print(dmu.formatsBitsAsHexString(binstr), end="")
+            binstr = []
+
     print()    
 
 def printCompLanes(mat,mat2, label):

@@ -17,7 +17,7 @@ def D(mat, x, z):
     return (C(mat, (x-1) % x_len, z) ^ C(mat, (x+1) % x_len, (z-1) % w))
 
 
-#Theta function, performs theta function on matrix mat with dimensions x_len, y_len, z_len
+#Theta function, performs theta function on matrix mat 
 def theta(mat):
     matp = copy.deepcopy(mat)
     w = len(mat[0][0])

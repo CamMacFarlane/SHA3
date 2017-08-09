@@ -1,10 +1,8 @@
 import copy
 import matrixUtils as mu
 
-w = 4
 x_len = 5
 y_len = 5
-z_len = w
 
 
 #shifts lanes by offset
@@ -15,8 +13,8 @@ def ro(mat):
     x = 1
     w = len(mat[0][0])
     #for t = 0 to t = 23
-    for t in range(24):
-        for z in range(w):
+    for t in range(0,24):
+        for z in range(0,w):
             offset = ((t+1)*(t+2)/2)
             offset = int(offset)
             matp[x][y][z] = mat[x][y][(z - offset)%w]
@@ -27,6 +25,10 @@ def ro(mat):
 
     return matp
 
+#*******************************************************************#
+#Test functions
+
+z_len = 4
 def test():
     A = [[[0 for k in range(z_len)] for k in range(y_len)]
          for k in range(x_len)]
@@ -36,3 +38,4 @@ def test():
     Ap = ro(A)
     print("           After Ro | Before Ro")
     mu.matPrint(Ap, 'l', True, True, A)
+# test()
