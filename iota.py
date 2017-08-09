@@ -11,7 +11,7 @@ y_len = 5
 "The effect of ι is to modify some of the bits of Lane (0, 0) in a manner that depends on the round
 index i r . The other 24 lanes are not affected by ι."
 """
-def l(mat, ir):
+def iota(mat, ir):
     matp = copy.deepcopy(mat)
     w = len(mat[0][0])
     l_var = int(np.log2(w))
@@ -56,7 +56,7 @@ def test():
     # mu.populate(A)
     maxRoundIndex = 2
     for roundIndex in range(0, maxRoundIndex):
-        Ap = l(A, roundIndex)
+        Ap = iota(A, roundIndex)
         print("    After l (A')   | Before l (A)")
         print(Ap[0][0], A[0][0], "\n")
         # mu.matPrint(Ap, 'l', True, True, A)                

@@ -40,15 +40,8 @@ def randomlyPopulatePlane(plane):
         for z in range(len(plane[0])):
             plane[x][z] = randint(0, 1)
 
-def xtoFIPS(x):
-    return{
-       0:2,
-       1:3,
-       2:4,
-       3:0,
-       4:1,
-    }.get(x, "ERROR")
 
+#Prints a labled plane
 def printPlane(plane):
     for x in range(len(plane)):
         print(x, " ", end="")
@@ -60,14 +53,7 @@ def printPlane(plane):
     print()
         # print()
 
-def convertPlaneToFIPS(plane):
-    planeP = copy.deepcopy(plane)
-    for z in range(len(plane[0])):
-        for x in range(len(plane)):
-            # print(x ,z , "->", xtoFIPS(x),z )
-            planeP[xtoFIPS(x)][z] = plane[x][z]
-    return planeP
-
+#perform D function
 def performD(plane):
     planeP = copy.deepcopy(plane)
     x_len = len(plane)
@@ -79,87 +65,27 @@ def performD(plane):
         
     return planeP
 
-def reverseD(plane):
-    x_len = len(plane)
-    w = len(plane[0])
-    # printPlane(plane)
-    plane1 = [[0 for k in range(w)] for k in range(x_len)]
-    plane2 = [[0 for k in range(w)] for k in range(x_len)]
-    first = True
-    x = 0
-    z = 0
-
-    while ((((x == 0) and (z == 0)) == False) or (first == True)):
-        plane1[(x+2)%x_len][(z-1)%w] = plane1[x][z] ^ plane[(x+1)%x_len][z]
-        x = (x+2)%x_len
-        z = (z-1)%w
-        first = False
-    
-    # printPlane(plane1)
-    # print("oooor")
-
-    plane2[0][0] = 1
-    first = True
-
-    while (((((x+2)%x_len == 0) and ((z-1)%w == 0)) == False) or (first == True)):
-
-        plane2[(x+2)%x_len][(z-1)%w] = plane2[x][z] ^ plane[(x+1)%x_len][z]
-        x = (x+2)%x_len
-        z = (z-1)%w
-        first = False
-
-    # printPlane(plane2)
-    return([plane1,plane2])
-
-
-def Dgenerator():
-    x_len = 5
-    w = 4
-    plane = [[0 for k in range(w)] for k in range(x_len)]
-    randomlyPopulatePlane(plane)
-    # FIPSPlane = convertPlaneToFIPS(plane)
-    # printPlane(FIPSPlane)
-
-    # print()
-    newPlane = performD(plane)
-    # FIPSNewPlane = convertPlaneToFIPS(newPlane)
-    printPlane(plane)
-    print()
-    planes = reverseD(newPlane)
-    printPlane(planes[0])
-    printPlane(planes[1])
-# numSets = 1 
-
-# for i in range(numSets):
-#     print("\nSet: ", i, "\n-------------------------")
-
-#     Dgenerator()
-def countOnes(plane):
-    x_len = len(plane)
-    w = len(plane[0])
-    count = 0
-    for x in range(x_len):
-        for z in range(w):
-            if(plane[x][z] == 1):
-                count = count + 1
-    return count
-
-def populateRowCandidate(row, i ):
+#Fills a row with a binary number given as an int i
+#Example, given a row = [x,x,x,x,x] and i = 3 it will change the row to be [0,0,0,1,1]
+def fillRowWithBinaryNumber(row, i ):
     candidate_first_row = str(format(i,'b').zfill(x_len))
     candidate_first_row = list(candidate_first_row)
     for j in range(len(row)):
         row[j] = int(candidate_first_row[j])
 
+#Replaces a row at rownum in a plane
 def replaceRow(plane, rowNum, row):
     for i in range(len(row)):
         plane[i][rowNum] = row[i]
 
+#Gets a row at rownum from a plane
 def getRow(plane,rowNum):
     row = [0,0,0,0,0]
     for i in range(len(row)):
         row[i] = plane[i][rowNum]
     return row
 
+#Checks to see if the candidate is valid, returns true if candidate is valid
 def checkIfCandidateIsValid(candidate, c_prime):
     testDPlane = performD(candidate)
     validCandidate = True
@@ -171,7 +97,9 @@ def checkIfCandidateIsValid(candidate, c_prime):
         # print("Candidate!")
     return validCandidate
 
-def planeInverse(c_prime):
+#Generates the plane C that prduced the given C' plane
+#If it's possible that more than one C plane produced C' then will return -1
+def generateCPlaneFromCPrime(c_prime):
     x_len = 5
     w = len(c_prime[0])
     last_index = w - 1
@@ -186,7 +114,7 @@ def planeInverse(c_prime):
         D_first_row_candidate = [0,0,0,0,0]
         
         #Create test D
-        populateRowCandidate(D_first_row_candidate, i)
+        fillRowWithBinaryNumber(D_first_row_candidate, i)
         replaceRow(D_candidate, last_index, D_first_row_candidate)
 
         
@@ -211,6 +139,7 @@ def planeInverse(c_prime):
 
     return final_C_candidate 
 
+#XORs a plane with each plane in a state matrix mat
 def xOrPlaneWithMatrix(mat,plane):
     w = len(mat[0][0])
 
@@ -224,7 +153,7 @@ def xOrPlaneWithMatrix(mat,plane):
                 newMatrix[x][y][z] = mat[x][y][z] ^ plane[x][z]
     return newMatrix
 
-   
+#Inverts a state matrix A' to A, returns -1 if there are more than 1 C candidates (collision)
 def thetaInverse(mat):
     matp = copy.deepcopy(mat)
     w = len(mat[0][0])
@@ -238,7 +167,7 @@ def thetaInverse(mat):
             planep[x][z] = C(matp, x,z)
     
 
-    recoveredPlane = planeInverse(planep)
+    recoveredPlane = generateCPlaneFromCPrime(planep)
     if(recoveredPlane == -1):
         return -1
     for x in range(5):
@@ -254,7 +183,7 @@ def test():
     b = 200
     binaryList = dmu.generateRandomList(b)    
     hexInputTxt = dmu.formatBitsAsByteSplitHexString(binaryList, "")
-    # print("A   = ",hexInputTxt)
+    print("A   = ",hexInputTxt)
 
     A = dmu.convertListToStateMatrix(binaryList)
     w = len(A[0][0])
@@ -263,12 +192,14 @@ def test():
 
     binOutput1 = dmu.convertMatrixToList(Ap, b)
     hexOutput1 = dmu.formatBitsAsByteSplitHexString(binOutput1, "")
-    # print("A'  = ",hexOutput1)
+    print("A'  = ",hexOutput1)
     App = thetaInverse(Ap)
     if(App == -1):
-        print(hexInput)
-        print(hexOutput1)
+        print("TWO C candidates!")
+        print("INPUT to theta was: ",hexInput)
+        print("INPUT to thetaInverse was: ", hexOutput1)
         exit()
-    binOutput = dmu.convertMatrixToList(App, b)
-    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
-    # print("A'' = ",hexOutput)
+    binOutput2 = dmu.convertMatrixToList(App, b)
+    hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
+    print("A'' = ",hexOutput2)
+# test()

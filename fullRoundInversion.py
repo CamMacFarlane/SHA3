@@ -1,5 +1,5 @@
 import matrixUtils as mu
-import theta, ro, pi, chi, l, pad
+import theta, ro, pi, chi, iota, pad
 import rhoInverse, chiInverse, piInverse, iotaInverse, thetaInverse
 import DataManipulationUtils as dmu 
 import random
@@ -31,7 +31,7 @@ def RND(mat, roundIndex, verbose = False):
         Sp = dmu.convertMatrixToList(Ap,b)
         print("result of chi: ", dmu.formatBitsAsByteSplitHexString(Sp, ""))
     
-    Ap = l.l(Ap,roundIndex)
+    Ap = iota.iota(Ap,roundIndex)
     
     if(verbose):
         Sp = dmu.convertMatrixToList(Ap,b)
@@ -79,8 +79,10 @@ def undoRND(mat, roundIndex, verbose = False):
    
 
     return Ap
+
+#Test for RND^-1 using generated input for a given nr
 def test3():
-    nr = 2
+    nr = 10
     plainTextBin = dmu.generateRandomList(b)
     plainTextHex = dmu.formatBitsAsByteSplitHexString(plainTextBin, "")
     print("BEGIN EXAMPLE")
@@ -121,53 +123,7 @@ def test3():
     print("Result of ", nr, "inverse rounds:", hexOutput2)
     if(hexOutput2 == plainTextHex):
         print("Successful recovery")
-    
-def test():
 
-    ir = random.randint(0,24)
-    
-    plainTextBin = dmu.generateRandomList(b)
-    plainTextHex = dmu.formatBitsAsByteSplitHexString(plainTextBin, "")
-
-    print("b = ",b, "ir = ", ir)
-    print("Input to RND:", plainTextHex)
-
-    A = dmu.convertListToStateMatrix(plainTextBin)
-
-    Ap = RND(A,ir)
-    
-    binOutput = dmu.convertMatrixToList(Ap, b)
-    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
-    
-    print("Output of RND: ", hexOutput)
-
-    RecoveredMatrix = undoRND(Ap, ir)
-    
-    binOutput2 = dmu.convertMatrixToList(RecoveredMatrix, b)
-    hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
-    
-    print("Output of undoRND function: ", hexOutput2)
-
-    if(hexOutput2 == plainTextHex):
-        print("Successful recovery")
-    else:
-        print("Fail!")
-        exit()
-
-def test2():
-    hexInput = "024a5518e1e95db53219000000000000000000000000000000"
-    binaryList = dmu.fromHexToBits(hexInput)
-
-    print(hexInput)
-
-    Ap = dmu.convertListToStateMatrix(binaryList)
-    RecoveredMatrix = undoRND(Ap, 1)
-    RecoveredMatrix = undoRND(RecoveredMatrix, 0)
-
-    binOutput2 = dmu.convertMatrixToList(RecoveredMatrix, b)
-    hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
-    
-    print("Output of undoRND function: ", hexOutput2)
 
     
 test3()

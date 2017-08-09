@@ -3,7 +3,7 @@ import matrixUtils as mu
 import numpy as np
 import rc 
 import DataManipulationUtils as dmu
-import l
+import iota
 x_len = 5
 y_len = 5
 
@@ -32,26 +32,28 @@ def iotaInverse(mat, ir):
 
 def test():
     b = 200
-    # hexInput = input()    
-    # b = len(hexInput*4)
-    # ir = int(input())
+
     
     ir = 2
     binaryList = dmu.generateRandomList(200)
     hexInput = dmu.formatBitsAsByteSplitHexString(binaryList, "")
+    
     print("ir = ", ir)
     print("Input to Iota:", hexInput)
+    
     # binaryList = dmu.fromHexToBits(hexInput)
     A = dmu.convertListToStateMatrix(binaryList)
-    Ap = l.l(A, ir)
+    Ap = iota.iota(A, ir)
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
 
     print("Output of 1 round of Iota:", hexOutput)
-    App = l.l(Ap,ir) 
+    
+    App = iota.iota(Ap,ir) 
     # iotaInverse(A, ir)
     binOutput = dmu.convertMatrixToList(App, b)
     hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     
     print("Output of second round of Iota:",hexOutput)
+
 # test()
