@@ -1,4 +1,4 @@
-import SHA3Examples as bb
+import SHA3Examples
 import matrixUtils as mu
 import DataManipulationUtils as dmu
 import random
@@ -17,6 +17,7 @@ TXTtarget = open(fileName  +"_with_b_" + str(b) + "_dataPoints_" + str(numDataPo
 # CSVtarget.write(headerString + "\n")
 # TXTtarget.write(headerString + "\n")
 # print("        INPUT                                                                             OUTPUT")
+
 r = 40
 for i in range(numDataPoints):
     messageLength = random.randint(1,(r-3))
@@ -34,8 +35,8 @@ for i in range(numDataPoints):
     hexInputCSV = dmu.formatBitsAsByteSplitHexString(binaryInput, "")
     hexInputCSVByte = dmu.formatBitsAsByteSplitHexString(binaryInput, ",")
     
-    # A = dmu.convertListToStateMatrix(binaryInput)
-    binOutput = bb.keccackRCNRM(40,160,2,binaryInput)
+    #Choose the values of r,c,nr here or choose one of the SHA-224,SHA-256... functions
+    binOutput = SHA3Examples.keccackRCNRM(40,160,2,binaryInput)
     
     # binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutputTxt = dmu.formatBitsAsByteSplitHexString(binOutput, "")

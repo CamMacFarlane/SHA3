@@ -2,6 +2,8 @@ import DataManipulationUtils as dmu
 import copy
 import chi
 import matrixUtils as mu
+
+#Look up tabke for chi rows
 def reverseChiRow(row):
     return {
         "00000" : "00000",
@@ -37,6 +39,7 @@ def reverseChiRow(row):
         "11110" : "11100",
         "11111" : "11111",
     }[row]
+
 def quicktest():
     for i in range(32):
         binary = str(format(i,'b').zfill(5))
@@ -45,16 +48,6 @@ def quicktest():
         print(i, binary, result, intResult)
 
 def quicktest2():
-    for i in range(32):
-        row = [0]*5
-        binary = (format(i,'05b').zfill(5))
-        for j in range(5):
-            row[j] = int(binary[j])
-        result = SamerReverseRow(row)
-        # intResult = int(result, 2)
-        print(i, binary, result)
-
-def quicktest3():
     for i in range(32):
         row = [0]*5
         binary1 = (format(i,'05b').zfill(5))
@@ -72,7 +65,7 @@ def quicktest3():
             exit()
         print(binary1, "Samer:", result1, "Expected:", result2)
         
-            # exit()
+    print("SUCCESS")
 
 
 
@@ -98,7 +91,7 @@ def chiInverse(mat):
     return matp
 
 
-# def test():
+#Binary logic method
 def SamerReverseRow2(row):
     x_len = len(row)
     newRow = [0]*x_len
@@ -109,27 +102,9 @@ def SamerReverseRow2(row):
         x2 = row[(i+2)%x_len]
         x3 = row[(i+3)%x_len]
         x4 = row[(i+4)%x_len]
-        # print(A,B,C,D,E)
         newRow[i] = x0&x1 | (x1^1)&(x3^1)&(x4)&((x0^1)&(x2^1) | (x0&x2)) | ((x1^1)&x3)&(x0^x2) | ((x1^1)&(x4^1))&(x0^x2)
-        #A[B+C'E'+C'D+CD'E] + A'B'[CE'+C'D'E]
-    # print(newRow)
     return newRow
     
-def SamerReverseRow(row):
-    x_len = len(row)
-    newRow = [0]*x_len
-    
-    for i in range(x_len):
-        A = row[i]
-        B = row[(i+1)%x_len]
-        C = row[(i+2)%x_len]
-        D = row[(i+3)%x_len]
-        E = row[(i+4)%x_len]
-        # print(A,B,C,D,E)
-        newRow[i] = A*(( (B | ( (C^1)*(E^1) ) ) | ( (C^1)*D) | C*(D^1)*E ) ) | (A^1)*(B^1)*( C*(E^1) | (C^1)*(D^1)*E)
-        #A[B+C'E'+C'D+CD'E] + A'B'[CE'+C'D'E]
-    # print(newRow)
-    return newRow
 
 
 b = 200
@@ -174,3 +149,4 @@ def test():
     if(hexOutput2 == hexInputTxt):
         print("SUCCESS")
 # test()
+# quicktest2()

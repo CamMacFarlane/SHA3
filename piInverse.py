@@ -19,7 +19,11 @@ def piInverse(mat):
     return matp
 
 b = 200
+
+#Test that takes input
 def test():
+    print("b must be set in the script! b is ", b)
+    print("Input to pi (hex): ",end="")
     hexInput = input()    
     
     binaryList = dmu.fromHexToBits(hexInput)
@@ -32,7 +36,7 @@ def test():
     
     print(hexOutput)
 
-
+#Test that generates input
 def test2():
     binaryList = dmu.generateRandomList(b)
     hexInput = dmu.formatBitsAsByteSplitHexString(binaryList, "")
@@ -49,4 +53,4 @@ def test2():
     hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     
     print("A'':",hexOutput)
-# test2()
+# test()

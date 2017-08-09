@@ -29,10 +29,28 @@ def rhoInverse(mat):
 #*******************************************************************#
 #Test functions
 b = 200
+
+#Test that takes input
 def test():
+    print("b must be set in the script! b is ", b)
+    print("input to rho (hex): ",end="")
+    hexInput = input()    
+    
+    binaryList = dmu.fromHexToBits(hexInput)
+    A = dmu.convertListToStateMatrix(binaryList)
+    Ap = rhoInverse(A)
+
+    binOutput = dmu.convertMatrixToList(Ap, b)
+    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
+    
+    print(hexOutput)
+
+#Test that generates input
+def test2():
     binaryInput = dmu.generateRandomList(b)    
     hexInputTxt = dmu.formatBitsAsByteSplitHexString(binaryInput, "")
-    print("input to rho: ", hexInputTxt)
+    print("b must be set in the script! b is ", b)
+    print("input to rho : ", hexInputTxt)
     print(binaryInput)
     A = dmu.convertListToStateMatrix(binaryInput)
     Ap = ro.ro(A)
@@ -47,18 +65,6 @@ def test():
     print("Output from roInverse: ", hexOutput2)
     if(hexOutput2 == hexInputTxt):
         print("SUCCESS")
-
-def test2():
-    hexInput = input()    
-    
-    binaryList = dmu.fromHexToBits(hexInput)
-    A = dmu.convertListToStateMatrix(binaryList)
-    Ap = roInverse(A)
-
-    binOutput = dmu.convertMatrixToList(Ap, b)
-    hexOutput = dmu.formatBitsAsByteSplitHexString(binOutput, "")
-    
-    print(hexOutput)
 
 
 # test()
