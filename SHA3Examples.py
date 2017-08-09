@@ -1,6 +1,6 @@
 import matrixUtils as mu
 import theta
-import ro
+import rho
 import pi
 import chi
 import iota
@@ -192,7 +192,7 @@ def RND(mat, roundIndex, verbose = False):
         Sp = dmu.convertMatrixToList(Ap,b)
         print("result of theta: ", dmu.formatBitsAsByteSplitHexString(Sp, " "))
     
-    Ap = ro.ro(Ap)
+    Ap = rho.rho(Ap)
     
     if verbose:
         Sp = dmu.convertMatrixToList(Ap,b)
@@ -318,3 +318,4 @@ def test():
     print("Provide input for SHA-512: ",end="")
     M = input()
     SHA3_512(M,True)
+test()

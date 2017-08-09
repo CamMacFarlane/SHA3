@@ -1,5 +1,5 @@
 import matrixUtils as mu
-import theta, ro, pi, chi, iota, pad
+import theta, rho, pi, chi, iota, pad
 import rhoInverse, chiInverse, piInverse, iotaInverse, thetaInverse
 import DataManipulationUtils as dmu 
 import random
@@ -14,7 +14,7 @@ def RND(mat, roundIndex, verbose = False):
         Sp = dmu.convertMatrixToList(Ap,b)
         print("result of theta: ", dmu.formatBitsAsByteSplitHexString(Sp, ""))
     
-    Ap = ro.ro(Ap)
+    Ap = rho.rho(Ap)
     
     if(verbose):
         Sp = dmu.convertMatrixToList(Ap,b)

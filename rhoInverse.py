@@ -1,7 +1,7 @@
 import copy
 import matrixUtils as mu
 import DataManipulationUtils as dmu
-import ro
+import rho
 x_len = 5
 y_len = 5
 
@@ -53,7 +53,7 @@ def test2():
     print("input to rho : ", hexInputTxt)
     print(binaryInput)
     A = dmu.convertListToStateMatrix(binaryInput)
-    Ap = ro.ro(A)
+    Ap = rho.rho(A)
     binOutput = dmu.convertMatrixToList(Ap, b)
     hexOutputTxt = dmu.formatBitsAsByteSplitHexString(binOutput, "")
     print("Output from rho: ", hexOutputTxt)
@@ -62,9 +62,9 @@ def test2():
     binOutput2 = dmu.convertMatrixToList(App, b)
     hexOutput2 = dmu.formatBitsAsByteSplitHexString(binOutput2, "")
     print(binOutput2)
-    print("Output from roInverse: ", hexOutput2)
+    print("Output from rhoInverse: ", hexOutput2)
     if(hexOutput2 == hexInputTxt):
         print("SUCCESS")
 
 
-# test()
+test2()
